@@ -11,7 +11,7 @@ namespace CinemaApp.Data.Migrations
     using Microsoft.EntityFrameworkCore.Infrastructure;
     using Microsoft.EntityFrameworkCore.Migrations;
 
-    [DbContext(typeof(ApplicationDbContext))]
+    [DbContext(typeof(CinemaAppDbContext))]
     [Migration("20260223175628_InitialIdentitySetup")]
     partial class InitialIdentitySetup
     {

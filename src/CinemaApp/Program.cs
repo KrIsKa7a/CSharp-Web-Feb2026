@@ -15,7 +15,7 @@ namespace CinemaApp.Web
             string connectionString = builder.Configuration
                 .GetConnectionString("SqlServerDev") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
             
-            builder.Services.AddDbContext<ApplicationDbContext>(options =>
+            builder.Services.AddDbContext<CinemaAppDbContext>(options =>
                 options.UseSqlServer(connectionString));
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
@@ -24,7 +24,7 @@ namespace CinemaApp.Web
                 {
                     ConfigureIdentity(builder.Configuration, options);
                 })
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+                .AddEntityFrameworkStores<CinemaAppDbContext>();
             builder.Services.AddControllersWithViews();
 
             WebApplication app = builder.Build();
