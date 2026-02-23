@@ -1,6 +1,6 @@
 namespace CinemaApp.Web
 {
-    using CinemaApp.Data;
+    using Data;
 
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
