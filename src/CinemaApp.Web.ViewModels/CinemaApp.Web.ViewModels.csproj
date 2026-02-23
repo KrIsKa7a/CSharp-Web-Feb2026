@@ -9,7 +9,6 @@
   <ItemGroup>
     <ProjectReference Include="..\CinemaApp.Data.Models\CinemaApp.Data.Models.csproj" />
     <ProjectReference Include="..\CinemaApp.GCommon\CinemaApp.GCommon.csproj" />
-    <ProjectReference Include="..\CinemaApp.Services.AutoMapping\CinemaApp.Services.AutoMapping.csproj" />
   </ItemGroup>
 
 </Project>
