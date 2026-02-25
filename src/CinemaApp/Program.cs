@@ -15,7 +15,7 @@ namespace CinemaApp.Web
 
             // Add services to the container.
             string connectionString = builder.Configuration
-                .GetConnectionString("SqlServerDev") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+                .GetConnectionString("SqlServer") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
             
             builder.Services.AddDbContext<CinemaAppDbContext>(options =>
                 options.UseSqlServer(connectionString));

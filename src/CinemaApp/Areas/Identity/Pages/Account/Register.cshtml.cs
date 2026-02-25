@@ -107,8 +107,6 @@ namespace CinemaApp.Web.Areas.Identity.Pages.Account
                 IdentityResult result = await userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {
-                    string userId = await userManager.GetUserIdAsync(user);
-                    
                     if (userManager.Options.SignIn.RequireConfirmedAccount)
                     {
                         return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });
