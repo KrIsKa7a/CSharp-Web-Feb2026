@@ -5,8 +5,9 @@
 
     using Microsoft.EntityFrameworkCore;
 
-    public class MovieRepository : IMovieRepository
+    public class MovieRepository : IMovieRepository, IDisposable
     {
+        private bool isDisposed = false;
         private readonly CinemaAppDbContext dbContext;
 
         public MovieRepository(CinemaAppDbContext dbContext)
@@ -14,14 +15,23 @@
             this.dbContext = dbContext;
         }
 
-        public IQueryable<Movie> GetAllMoviesNoTracking()
+        public async Task<IEnumerable<Movie>> GetAllMoviesNoTrackingWithProjectionAsync(Func<Movie, Movie>? projectFunc = null)
         {
-            return dbContext
+            IQueryable<Movie> moviesFetchQuery = dbContext
                 .Movies
-                .AsNoTracking();
+                .AsNoTracking()
+                .OrderBy(m => m.Title);
+            if (projectFunc != null)
+            {
+                moviesFetchQuery = moviesFetchQuery
+                    .Select(m => projectFunc(m))
+                    .AsQueryable();
+            }
+
+            return await moviesFetchQuery.ToArrayAsync();
         }
 
-        public async Task<IEnumerable<Movie>> GetAllMovies()
+        public async Task<IEnumerable<Movie>> GetAllMoviesAsync()
         {
             return await dbContext
                 .Movies
@@ -36,6 +46,24 @@
             int resultCount = await SaveChangesAsync();
             
             return resultCount == 1;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected void Dispose(bool disposing)
+        {
+            if (!isDisposed)
+            {
+                if (disposing)
+                {
+                    dbContext.Dispose();
+                }
+            }
+            isDisposed = true;
         }
 
         private async Task<int> SaveChangesAsync()

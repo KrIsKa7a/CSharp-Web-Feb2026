@@ -4,9 +4,9 @@
 
     public interface IMovieRepository
     {
-        IQueryable<Movie> GetAllMoviesNoTracking();
+        Task<IEnumerable<Movie>> GetAllMoviesNoTrackingWithProjectionAsync(Func<Movie, Movie>? projectFunc = null);
 
-        Task<IEnumerable<Movie>> GetAllMovies();
+        Task<IEnumerable<Movie>> GetAllMoviesAsync();
 
         Task<bool> AddMovieAsync(Movie movie);
     }

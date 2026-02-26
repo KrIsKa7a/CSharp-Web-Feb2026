@@ -22,8 +22,21 @@
 
         public async Task<IEnumerable<AllMoviesIndexViewModel>> GetAllMoviesOrderedByTitleAsync()
         {
-            IEnumerable<AllMoviesIndexViewModel> allMoviesViewModel = await movieRepository
-                .GetAllMoviesNoTracking()
+            // TODO: Use special DTO
+            // Fetch data
+            IEnumerable<Movie> allMoviesDb = await movieRepository
+                .GetAllMoviesNoTrackingWithProjectionAsync(m => new Movie()
+                {
+                    Id = m.Id,
+                    Title = m.Title,
+                    Genre = m.Genre,
+                    ReleaseDate = m.ReleaseDate,
+                    Director = m.Director,
+                    ImageUrl = m.ImageUrl
+                });
+
+            // Process data
+            IEnumerable<AllMoviesIndexViewModel> allMoviesViewModel = allMoviesDb
                 .Select(m => new AllMoviesIndexViewModel()
                 {
                     Id = m.Id,
@@ -36,8 +49,9 @@
                 .OrderBy(m => m.Title)
                 .ThenBy(m => m.Genre)
                 .ThenBy(m => m.Director)
-                .ToArrayAsync();
+                .ToArray();
 
+            // Return processed data
             return allMoviesViewModel;
         }
 
