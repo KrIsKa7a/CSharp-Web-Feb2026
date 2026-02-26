@@ -1,16 +1,16 @@
 ﻿namespace CinemaApp.Web.Controllers
 {
-    using AutoMapper;
     using GCommon.Exceptions;
     using Services.Core.Contracts;
+    using Services.Models.Movie;
     using ViewModels.Movie;
     using static GCommon.OutputMessages.Movie;
     using static GCommon.ApplicationConstants;
 
+    using AutoMapper;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
-    using Services.Models.Movie;
 
     public class MovieController : BaseController
     {
@@ -54,7 +54,10 @@
 
             try
             {
-                await movieService.CreateMovieAsync(formModel);
+                MovieDetailsDto movieDetailsDto = mapper
+                    .Map<MovieDetailsDto>(formModel);
+
+                await movieService.CreateMovieAsync(movieDetailsDto);
             }
             catch (EntityPersistFailureException ecpfe)
             {
@@ -85,14 +88,17 @@
                 return BadRequest();
             }
 
-            MovieDetailsViewModel? movieDetailsVm = await movieService
+            MovieDetailsDto? movieDetailsDto = await movieService
 		        .GetMovieDetailsByIdAsync(id);
-	        if (movieDetailsVm == null)
+	        if (movieDetailsDto == null)
 	        {
                 return NotFound();
 			}
 
-	        return View(movieDetailsVm);
+            MovieDetailsViewModel movieDetailsVm = mapper
+                .Map<MovieDetailsViewModel>(movieDetailsDto);
+
+            return View(movieDetailsVm);
         }
 
         [HttpGet]
@@ -103,13 +109,15 @@
                 return BadRequest();
             }
 
-            MovieFormModel? movieFormModel = await movieService
+            MovieDetailsDto? movieDetailsDto = await movieService
                 .GetMovieFormModelByIdAsync(id);
-            if (movieFormModel == null)
+            if (movieDetailsDto == null)
             {
                 return NotFound();
             }
 
+            MovieFormModel movieFormModel = mapper
+                .Map<MovieFormModel>(movieDetailsDto);
             return View(movieFormModel);
         }
 
@@ -128,7 +136,9 @@
 
             try
             {
-                await movieService.EditMovieAsync(id, formModel);
+                MovieDetailsDto movieDetailsDto = mapper
+                    .Map<MovieDetailsDto>(formModel);
+                await movieService.EditMovieAsync(id, movieDetailsDto);
             }
             catch (EntityNotFoundException enfe)
             {
@@ -153,14 +163,16 @@
                 return BadRequest();
             }
 
-            MovieDetailsViewModel? movieDetailsVm = await movieService
+            MovieDetailsDto? movieDetailsDto = await movieService
                 .GetMovieDetailsByIdAsync(id);
-            if (movieDetailsVm == null)
+            if (movieDetailsDto == null)
             {
                 return NotFound();
             }
 
-            return View(movieDetailsVm);
+            MovieDeleteViewModel movieDeleteVm = mapper
+                .Map<MovieDeleteViewModel>(movieDetailsDto);
+            return View(movieDeleteVm);
         }
 
         [HttpPost]

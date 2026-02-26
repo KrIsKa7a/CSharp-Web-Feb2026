@@ -1,13 +1,12 @@
 ﻿namespace CinemaApp.Services.Models.Movie
 {
-    using System.Globalization;
-    using AutoMapper;
     using Data.Models;
     using Mapping;
-
     using static GCommon.ApplicationConstants;
 
-    public class MovieAllDto : IMapFrom<Movie>, IHaveCustomMappings
+    using AutoMapper;
+
+    public class MovieAllDto : IMapFrom<Movie>, IMapTo<Movie>, IHaveCustomMappings
     {
         public Guid Id { get; set; }
 
@@ -15,7 +14,7 @@
 
         public string Genre { get; set; } = null!;
 
-        public string ReleaseDate { get; set; } = null!;
+        public DateOnly ReleaseDate { get; set; }
 
         public string Director { get; set; } = null!;
 
@@ -23,9 +22,8 @@
 
         public void CreateMappings(IProfileExpression configuration)
         {
-            configuration.CreateMap<Movie, MovieAllDto>()
-                .ForMember(d => d.ReleaseDate, 
-                    y => y.MapFrom(s => s.ReleaseDate.ToString(DefaultDateFormat, CultureInfo.InvariantCulture)));
+            configuration.CreateMap<MovieAllDto, Movie>()
+                .ForMember(d => d.Id, opt => opt.Ignore());
         }
     }
 }

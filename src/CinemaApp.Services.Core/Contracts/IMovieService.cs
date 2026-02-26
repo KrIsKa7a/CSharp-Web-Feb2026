@@ -8,15 +8,15 @@
         Task<IEnumerable<MovieAllDto>> GetAllMoviesOrderedByTitleAsync();
 
         // TODO: Service to be refactored to work without coupling to ViewModels
-        Task CreateMovieAsync(MovieFormModel movieFormModel);
+        Task CreateMovieAsync(MovieDetailsDto movieDetailsDto);
 
-        Task<MovieDetailsViewModel?> GetMovieDetailsByIdAsync(Guid id);
+        Task<MovieDetailsDto?> GetMovieDetailsByIdAsync(Guid id);
 
-        Task<MovieFormModel?> GetMovieFormModelByIdAsync(Guid id);
+        Task<MovieDetailsDto?> GetMovieFormModelByIdAsync(Guid id);
 
         Task<bool> ExistsByIdAsync(Guid id);
 
-        Task EditMovieAsync(Guid id, MovieFormModel movieFormModel);
+        Task EditMovieAsync(Guid id, MovieDetailsDto movieDetailsDto);
 
         Task SoftDeleteMovieAsync(Guid id);
 
