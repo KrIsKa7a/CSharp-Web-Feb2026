@@ -16,5 +16,9 @@
         Task<bool> ExistsByIdAsync(Guid id);
 
         Task EditMovieAsync(Guid id, MovieFormModel movieFormModel);
+
+        Task SoftDeleteMovieAsync(Guid id);
+
+        Task HardDeleteMovieAsync(Guid id);
     }
 }

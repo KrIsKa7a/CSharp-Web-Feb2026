@@ -14,6 +14,10 @@
 
         Task<bool> EditMovieAsync(Movie movie);
 
+        Task<bool> SoftDeleteMovieAsync(Movie movie);
+
+        Task<bool> HardDeleteMovieAsync(Movie movie);
+
         Task<bool> ExistsByIdAsync(Guid id);
     }
 }

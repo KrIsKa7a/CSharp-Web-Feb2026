@@ -148,5 +148,37 @@
                 throw new EntityPersistFailureException();
             }
         }
+
+        public async Task SoftDeleteMovieAsync(Guid id)
+        {
+            Movie? movieDb = await movieRepository
+                .GetMovieByIdAsync(id);
+            if (movieDb == null)
+            {
+                throw new EntityNotFoundException();
+            }
+
+            bool deleteSuccess = await movieRepository.SoftDeleteMovieAsync(movieDb);
+            if (!deleteSuccess)
+            {
+                throw new EntityPersistFailureException();
+            }
+        }
+
+        public async Task HardDeleteMovieAsync(Guid id)
+        {
+            Movie? movieDb = await movieRepository
+                .GetMovieByIdAsync(id);
+            if (movieDb == null)
+            {
+                throw new EntityNotFoundException();
+            }
+
+            bool deleteSuccess = await movieRepository.HardDeleteMovieAsync(movieDb);
+            if (!deleteSuccess)
+            {
+                throw new EntityPersistFailureException();
+            }
+        }
     }
 }
