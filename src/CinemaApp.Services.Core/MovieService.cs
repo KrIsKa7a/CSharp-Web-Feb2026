@@ -22,9 +22,9 @@
 
         public async Task<IEnumerable<AllMoviesIndexViewModel>> GetAllMoviesOrderedByTitleAsync()
         {
-            // TODO: Use special DTO
-            // Fetch data
-            IEnumerable<Movie> allMoviesDb = await movieRepository
+			// TODO: Use DTOs for data transfers between Data-Service-Controller layers instead of coupling Service to ViewModels
+			// Fetch data
+			IEnumerable<Movie> allMoviesDb = await movieRepository
                 .GetAllMoviesNoTrackingWithProjectionAsync(m => new Movie()
                 {
                     Id = m.Id,
@@ -74,5 +74,28 @@
                 throw new EntityCreatePersistFailureException();
             }
         }
+
+        public async Task<MovieDetailsViewModel?> GetMovieDetailsByIdAsync(Guid id)
+        {
+	        Movie? movieDb = await movieRepository
+		        .GetMovieByIdAsync(id);
+
+	        if (movieDb == null)
+	        {
+		        return null;
+	        }
+
+            return new MovieDetailsViewModel()
+            {
+				Id = movieDb.Id,
+				Title = movieDb.Title,
+				Genre = movieDb.Genre,
+				ReleaseDate = movieDb.ReleaseDate.ToString(DefaultDateFormat, CultureInfo.InvariantCulture),
+				Description = movieDb.Description,
+				Duration = movieDb.Duration,
+				Director = movieDb.Director,
+				ImageUrl = movieDb.ImageUrl ?? DefaultImageUrl
+			};
+		}
     }
 }

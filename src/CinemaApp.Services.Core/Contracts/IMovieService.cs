@@ -8,5 +8,7 @@
 
         // TODO: Service to be refactored to work without coupling to ViewModels
         Task CreateMovieAsync(MovieFormModel movieFormModel);
-    }
+
+        Task<MovieDetailsViewModel?> GetMovieDetailsByIdAsync(Guid id);
+	}
 }

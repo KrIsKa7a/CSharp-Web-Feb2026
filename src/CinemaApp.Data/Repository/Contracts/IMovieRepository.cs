@@ -8,6 +8,8 @@
 
         Task<IEnumerable<Movie>> GetAllMoviesAsync();
 
-        Task<bool> AddMovieAsync(Movie movie);
+        Task<Movie?> GetMovieByIdAsync(Guid id);
+
+		Task<bool> AddMovieAsync(Movie movie);
     }
 }

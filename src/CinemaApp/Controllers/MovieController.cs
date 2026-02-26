@@ -69,5 +69,19 @@
             // TODO: Redirect to Manage after implementing Roles
             return RedirectToAction(nameof(Index));
         }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> Details(Guid id)
+        {
+	        MovieDetailsViewModel? movieDetailsVm = await movieService
+		        .GetMovieDetailsByIdAsync(id);
+	        if (movieDetailsVm == null)
+	        {
+                return NotFound();
+			}
+
+	        return View(movieDetailsVm);
+        }
     }
 }
