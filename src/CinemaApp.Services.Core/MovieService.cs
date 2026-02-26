@@ -3,7 +3,7 @@
     using System.Globalization;
 
     using Contracts;
-    using Data;
+    using Data.Repository.Contracts;
     using Web.ViewModels.Movie;
     using static GCommon.ApplicationConstants;
 
@@ -11,18 +11,17 @@
 
     public class MovieService : IMovieService
     {
-        private readonly CinemaAppDbContext dbContext;
+        private readonly IMovieRepository movieRepository;
 
-        public MovieService(CinemaAppDbContext dbContext)
+        public MovieService(IMovieRepository movieRepository)
         {
-            this.dbContext = dbContext;
+            this.movieRepository = movieRepository;
         }
 
         public async Task<IEnumerable<AllMoviesIndexViewModel>> GetAllMoviesOrderedByTitleAsync()
         {
-            IEnumerable<AllMoviesIndexViewModel> allMoviesViewModel = await dbContext
-                .Movies
-                .AsNoTracking()
+            IEnumerable<AllMoviesIndexViewModel> allMoviesViewModel = await movieRepository
+                .GetAllMoviesNoTracking()
                 .Select(m => new AllMoviesIndexViewModel()
                 {
                     Id = m.Id,
