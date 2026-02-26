@@ -16,18 +16,31 @@
 
         public IQueryable<Movie> GetAllMoviesNoTracking()
         {
-            return this.dbContext
+            return dbContext
                 .Movies
                 .AsNoTracking();
         }
 
         public async Task<IEnumerable<Movie>> GetAllMovies()
         {
-            return await this.dbContext
+            return await dbContext
                 .Movies
                 .AsNoTracking()
                 .OrderBy(m => m.Title)
                 .ToArrayAsync();
+        }
+
+        public async Task<bool> AddMovieAsync(Movie movie)
+        {
+            await dbContext.Movies.AddAsync(movie);
+            int resultCount = await SaveChangesAsync();
+            
+            return resultCount == 1;
+        }
+
+        private async Task<int> SaveChangesAsync()
+        {
+            return await dbContext.SaveChangesAsync();
         }
     }
 }

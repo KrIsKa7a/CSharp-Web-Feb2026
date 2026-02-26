@@ -7,5 +7,7 @@
         IQueryable<Movie> GetAllMoviesNoTracking();
 
         Task<IEnumerable<Movie>> GetAllMovies();
+
+        Task<bool> AddMovieAsync(Movie movie);
     }
 }
