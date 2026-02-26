@@ -6,21 +6,24 @@
     using Data.Models;
     using Data.Repository.Contracts;
     using GCommon.Exceptions;
+    using Models.Movie;
     using Web.ViewModels.Movie;
     using static GCommon.ApplicationConstants;
 
-    using Microsoft.EntityFrameworkCore;
+    using AutoMapper;
 
     public class MovieService : IMovieService
     {
+        private readonly IMapper mapper;
         private readonly IMovieRepository movieRepository;
 
-        public MovieService(IMovieRepository movieRepository)
+        public MovieService(IMovieRepository movieRepository, IMapper mapper)
         {
             this.movieRepository = movieRepository;
+            this.mapper = mapper;
         }
 
-        public async Task<IEnumerable<AllMoviesIndexViewModel>> GetAllMoviesOrderedByTitleAsync()
+        public async Task<IEnumerable<MovieAllDto>> GetAllMoviesOrderedByTitleAsync()
         {
 			// TODO: Use DTOs for data transfers between Data-Service-Controller layers instead of coupling Service to ViewModels
 			// Fetch data
@@ -36,16 +39,8 @@
                 });
 
             // Process data
-            IEnumerable<AllMoviesIndexViewModel> allMoviesViewModel = allMoviesDb
-                .Select(m => new AllMoviesIndexViewModel()
-                {
-                    Id = m.Id,
-                    Title = m.Title,
-                    Genre = m.Genre,
-                    ReleaseDate = m.ReleaseDate.ToString(DefaultDateFormat, CultureInfo.InvariantCulture),
-                    Director = m.Director,
-                    ImageUrl = m.ImageUrl ?? DefaultImageUrl
-                })
+            IEnumerable<MovieAllDto> allMoviesViewModel = mapper
+                .Map<IEnumerable<MovieAllDto>>(allMoviesDb)
                 .OrderBy(m => m.Title)
                 .ThenBy(m => m.Genre)
                 .ThenBy(m => m.Director)

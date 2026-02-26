@@ -1,6 +1,9 @@
 ﻿namespace CinemaApp.Web.ViewModels.Movie
 {
-    public class AllMoviesIndexViewModel
+    using Services.Mapping;
+    using Services.Models.Movie;
+
+    public class AllMoviesIndexViewModel : IMapFrom<MovieAllDto>
     {
         public Guid Id { get; set; }
 

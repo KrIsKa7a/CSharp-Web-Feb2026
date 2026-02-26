@@ -5,9 +5,12 @@ namespace CinemaApp.Web
     using Data.Repository.Contracts;
     using Services.Core;
     using Services.Core.Contracts;
+    using Services.Mapping;
 
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
+    using Services.Models.Movie;
+    using ViewModels.Movie;
 
     public class Program
     {
@@ -18,7 +21,9 @@ namespace CinemaApp.Web
             // Add services to the container.
             string connectionString = builder.Configuration
                 .GetConnectionString("SqlServer") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-            
+
+            AutoMapperConfig.RegisterMappings(typeof(MovieAllDto).Assembly, typeof(AllMoviesIndexViewModel).Assembly);
+
             builder.Services.AddDbContext<CinemaAppDbContext>(options =>
                 options.UseSqlServer(connectionString));
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
@@ -26,6 +31,8 @@ namespace CinemaApp.Web
             builder.Services.AddScoped<IMovieRepository, MovieRepository>();
 
             builder.Services.AddScoped<IMovieService, MovieService>();
+
+            builder.Services.AddSingleton(AutoMapperConfig.MapperInstance);
 
             builder.Services
                 .AddDefaultIdentity<IdentityUser>(options =>
