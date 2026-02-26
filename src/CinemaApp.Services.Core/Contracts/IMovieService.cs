@@ -10,5 +10,11 @@
         Task CreateMovieAsync(MovieFormModel movieFormModel);
 
         Task<MovieDetailsViewModel?> GetMovieDetailsByIdAsync(Guid id);
-	}
+
+        Task<MovieFormModel?> GetMovieFormModelByIdAsync(Guid id);
+
+        Task<bool> ExistsByIdAsync(Guid id);
+
+        Task EditMovieAsync(Guid id, MovieFormModel movieFormModel);
+    }
 }

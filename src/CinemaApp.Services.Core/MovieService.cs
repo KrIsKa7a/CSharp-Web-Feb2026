@@ -61,7 +61,7 @@
             {
                 Title = movieFormModel.Title,
                 Genre = movieFormModel.Genre,
-                ReleaseDate = DateOnly.FromDateTime(movieFormModel.ReleaseDate),
+                ReleaseDate = movieFormModel.ReleaseDate,
                 Description = movieFormModel.Description,
                 Duration = movieFormModel.Duration,
                 Director = movieFormModel.Director,
@@ -71,7 +71,7 @@
             bool successAdd = await movieRepository.AddMovieAsync(newMovie);
             if (!successAdd)
             {
-                throw new EntityCreatePersistFailureException();
+                throw new EntityPersistFailureException();
             }
         }
 
@@ -97,5 +97,56 @@
 				ImageUrl = movieDb.ImageUrl ?? DefaultImageUrl
 			};
 		}
+
+        public async Task<MovieFormModel?> GetMovieFormModelByIdAsync(Guid id)
+        {
+            Movie? movieDb = await movieRepository
+                .GetMovieByIdAsync(id);
+
+            if (movieDb == null)
+            {
+                return null;
+            }
+
+            return new MovieFormModel()
+            {
+                Title = movieDb.Title,
+                Genre = movieDb.Genre,
+                ReleaseDate = movieDb.ReleaseDate,
+                Description = movieDb.Description,
+                Duration = movieDb.Duration,
+                Director = movieDb.Director,
+                ImageUrl = movieDb.ImageUrl ?? DefaultImageUrl
+            };
+        }
+
+        public async Task<bool> ExistsByIdAsync(Guid id)
+        {
+            return await movieRepository.ExistsByIdAsync(id);
+        }
+
+        public async Task EditMovieAsync(Guid id, MovieFormModel movieFormModel)
+        {
+            Movie? movieDb = await movieRepository
+                .GetMovieByIdAsync(id);
+            if (movieDb == null)
+            {
+                throw new EntityNotFoundException();
+            }
+
+            movieDb.Title = movieFormModel.Title;
+            movieDb.Genre = movieFormModel.Genre;
+            movieDb.ReleaseDate = movieFormModel.ReleaseDate;
+            movieDb.Description = movieFormModel.Description;
+            movieDb.Duration = movieFormModel.Duration;
+            movieDb.Director = movieFormModel.Director;
+            movieDb.ImageUrl = movieFormModel.ImageUrl;
+            
+            bool editSuccess = await movieRepository.EditMovieAsync(movieDb);
+            if (!editSuccess)
+            {
+                throw new EntityPersistFailureException();
+            }
+        }
     }
 }
