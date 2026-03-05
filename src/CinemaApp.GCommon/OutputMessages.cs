@@ -30,5 +30,12 @@
 
             public const string CrudMovieFailureMessage = "An error occurred while {0} the movie. Please try again in a few minutes.";
         }
+
+        public static class Watchlist
+        {
+            public const string MovieAlreadyInWatchlistMessage = "The movie {0} is already in user {1} watchlist.";
+            public const string AddToWatchlistFailureMessage = "An error occurred while adding the movie to your watchlist. Please try again in a few minutes.";
+            public const string RemoveFromWatchlistFailureMessage = "An error occurred while removing the movie from your watchlist. Please try again in a few minutes.";
+        }
     }
 }

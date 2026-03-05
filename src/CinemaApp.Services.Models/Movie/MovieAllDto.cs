@@ -2,7 +2,6 @@
 {
     using Data.Models;
     using Mapping;
-    using static GCommon.ApplicationConstants;
 
     using AutoMapper;
 
@@ -20,8 +19,12 @@
 
         public string? ImageUrl { get; set; }
 
+        public bool IsInUserWatchlist { get; set; }
+
         public void CreateMappings(IProfileExpression configuration)
         {
+            configuration.CreateMap<Movie, MovieAllDto>()
+                .ForMember(d => d.IsInUserWatchlist, opt => opt.Ignore());
             configuration.CreateMap<MovieAllDto, Movie>()
                 .ForMember(d => d.Id, opt => opt.Ignore());
         }

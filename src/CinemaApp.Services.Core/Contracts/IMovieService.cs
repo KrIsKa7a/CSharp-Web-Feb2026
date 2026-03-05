@@ -5,7 +5,7 @@
 
     public interface IMovieService
     {
-        Task<IEnumerable<MovieAllDto>> GetAllMoviesOrderedByTitleAsync();
+        Task<IEnumerable<MovieAllDto>> GetAllMoviesOrderedByTitleAsync(string? userId = null);
 
         // TODO: Service to be refactored to work without coupling to ViewModels
         Task CreateMovieAsync(MovieDetailsDto movieDetailsDto);

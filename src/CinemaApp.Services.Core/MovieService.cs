@@ -14,16 +14,20 @@
 
     public class MovieService : IMovieService
     {
-        private readonly IMapper mapper;
         private readonly IMovieRepository movieRepository;
+        private readonly IWatchlistRepository watchlistRepository;
 
-        public MovieService(IMovieRepository movieRepository, IMapper mapper)
+        private readonly IMapper mapper;
+
+        public MovieService(IMovieRepository movieRepository, IWatchlistRepository watchlistRepository, IMapper mapper)
         {
             this.movieRepository = movieRepository;
+            this.watchlistRepository = watchlistRepository;
+
             this.mapper = mapper;
         }
 
-        public async Task<IEnumerable<MovieAllDto>> GetAllMoviesOrderedByTitleAsync()
+        public async Task<IEnumerable<MovieAllDto>> GetAllMoviesOrderedByTitleAsync(string? userId = null)
         {
 			// TODO: Use DTOs for data transfers between Data-Service-Controller layers instead of coupling Service to ViewModels
 			// Fetch data
@@ -39,15 +43,23 @@
                 });
 
             // Process data
-            IEnumerable<MovieAllDto> allMoviesViewModel = mapper
+            IEnumerable<MovieAllDto> allMoviesDtos = mapper
                 .Map<IEnumerable<MovieAllDto>>(allMoviesDb)
                 .OrderBy(m => m.Title)
                 .ThenBy(m => m.Genre)
                 .ThenBy(m => m.Director)
                 .ToArray();
+            if (!string.IsNullOrWhiteSpace(userId))
+            {
+                foreach (MovieAllDto movieDto in allMoviesDtos)
+                {
+                    movieDto.IsInUserWatchlist = await watchlistRepository
+                        .ExistsAsync(userId, movieDto.Id);
+                }
+            }
 
             // Return processed data
-            return allMoviesViewModel;
+            return allMoviesDtos;
         }
 
         public async Task CreateMovieAsync(MovieDetailsDto movieDetailsDto)

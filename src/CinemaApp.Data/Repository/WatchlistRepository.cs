@@ -23,5 +23,22 @@
 
             return userMovies;
         }
+
+        public async Task<bool> ExistsAsync(string userId, Guid movieId)
+        {
+            bool watchListEntryExist = await DbContext
+                .UsersMovies
+                .AnyAsync(um => um.UserId.ToLower() == userId.ToLower() && um.MovieId == movieId);
+
+            return watchListEntryExist;
+        }
+
+        public async Task<bool> AddUserMovieAsync(UserMovie userMovie)
+        {
+            await DbContext.UsersMovies.AddAsync(userMovie);
+            int resultCount = await SaveChangesAsync();
+
+            return resultCount == 1;
+        }
     }
 }
