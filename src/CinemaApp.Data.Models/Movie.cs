@@ -33,5 +33,8 @@
         public string? ImageUrl { get; set; }
 
         public bool IsDeleted { get; set; } = false;
+
+        public virtual ICollection<UserMovie> MovieUsersWatchlist { get; set; }
+            = new List<UserMovie>();
     }
 }
