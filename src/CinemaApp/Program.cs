@@ -3,6 +3,7 @@ namespace CinemaApp.Web
     using Data;
     using Data.Repository;
     using Data.Repository.Contracts;
+    using Infrastructure.Extensions;
     using Services.Core;
     using Services.Core.Contracts;
     using Services.Mapping;
@@ -28,11 +29,8 @@ namespace CinemaApp.Web
                 options.UseSqlServer(connectionString));
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-            builder.Services.AddScoped<IMovieRepository, MovieRepository>();
-            builder.Services.AddScoped<IWatchlistRepository, WatchlistRepository>();
-
-            builder.Services.AddScoped<IMovieService, MovieService>();
-            builder.Services.AddScoped<IWatchlistService, WatchlistService>();
+            builder.Services.RegisterRepositories(typeof(MovieRepository));
+            builder.Services.RegisterUserServices(typeof(MovieService));
 
             builder.Services.AddSingleton(AutoMapperConfig.MapperInstance);
 
