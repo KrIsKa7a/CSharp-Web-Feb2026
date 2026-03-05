@@ -6,11 +6,11 @@ namespace CinemaApp.Web
     using Services.Core;
     using Services.Core.Contracts;
     using Services.Mapping;
+    using Services.Models.Movie;
+    using ViewModels.Movie;
 
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
-    using Services.Models.Movie;
-    using ViewModels.Movie;
 
     public class Program
     {
@@ -29,8 +29,10 @@ namespace CinemaApp.Web
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
             builder.Services.AddScoped<IMovieRepository, MovieRepository>();
+            builder.Services.AddScoped<IWatchlistRepository, WatchlistRepository>();
 
             builder.Services.AddScoped<IMovieService, MovieService>();
+            builder.Services.AddScoped<IWatchlistService, WatchlistService>();
 
             builder.Services.AddSingleton(AutoMapperConfig.MapperInstance);
 
