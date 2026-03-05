@@ -65,5 +65,28 @@
 
             return RedirectToAction(nameof(Index));
         }
+
+        [HttpPost]
+        public async Task<IActionResult> Remove(Guid movieId)
+        {
+            string userId = GetUserId()!;
+
+            try
+            {
+                await watchlistService.RemoveMovieFromUserWatchlistAsync(userId, movieId);
+            }
+            catch (EntityNotFoundException enfe)
+            {
+                return BadRequest();
+            }
+            catch (EntityPersistFailureException epfe)
+            {
+                logger.LogError(epfe, RemoveFromWatchlistFailureMessage);
+
+                return RedirectToAction(nameof(Index));
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
     }
 }

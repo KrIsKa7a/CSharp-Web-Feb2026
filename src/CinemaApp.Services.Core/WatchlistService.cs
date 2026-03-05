@@ -38,11 +38,12 @@
 
             return watchlistMoviesDto;
         }
+
         public async Task AddMovieToUserWatchlistAsync(string userId, Guid movieId)
         {
-            bool userWatchlistEntryExists = await watchlistRepository
-                .ExistsAsync(userId, movieId);
-            if (userWatchlistEntryExists)
+            UserMovie? userMovie = await watchlistRepository
+                .GetUserMovieIncludeDeletedAsync(userId, movieId);
+            if (userMovie != null && userMovie.IsDeleted == false)
             {
                 throw new EntityAlreadyExistsException();
             }
@@ -54,15 +55,45 @@
                 throw new EntityNotFoundException();
             }
 
-            UserMovie newUserMovie = new UserMovie()
+            bool successPersist = false;
+            if (userMovie == null)
             {
-                UserId = userId,
-                MovieId = movieId
-            };
+                UserMovie newUserMovie = new UserMovie()
+                {
+                    UserId = userId,
+                    MovieId = movieId
+                };
 
-            bool successAdd = await watchlistRepository
-                .AddUserMovieAsync(newUserMovie);
-            if (!successAdd)
+                successPersist = await watchlistRepository
+                    .AddUserMovieAsync(newUserMovie);
+            }
+            else
+            {
+                // Recover soft-deleted entry
+                userMovie.IsDeleted = false;
+
+                successPersist = await watchlistRepository
+                    .UpdateUserMovieAsync(userMovie);
+            }
+
+            if (!successPersist)
+            {
+                throw new EntityPersistFailureException();
+            }
+        }
+
+        public async Task RemoveMovieFromUserWatchlistAsync(string userId, Guid movieId)
+        {
+            UserMovie? userMovie = await watchlistRepository
+                .GetUserMovieAsync(userId, movieId);
+            if (userMovie == null)
+            {
+                throw new EntityNotFoundException();
+            }
+
+            bool successDelete = await watchlistRepository
+                .SoftDeleteUserMovieAsync(userMovie);
+            if (!successDelete)
             {
                 throw new EntityPersistFailureException();
             }
