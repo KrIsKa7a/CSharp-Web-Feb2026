@@ -4,6 +4,7 @@
     using Services.Core.Contracts;
     using Services.Models.Watchlist;
     using ViewModels.Watchlist;
+    using static GCommon.ApplicationConstants;
     using static GCommon.OutputMessages.Watchlist;
 
     using AutoMapper;
@@ -59,6 +60,7 @@
             catch (EntityPersistFailureException epfe)
             {
                 logger.LogError(epfe, AddToWatchlistFailureMessage);
+                TempData[ErrorTempDataKey] = AddToWatchlistFailureMessage;
 
                 return RedirectToAction(nameof(Index));
             }
@@ -82,6 +84,7 @@
             catch (EntityPersistFailureException epfe)
             {
                 logger.LogError(epfe, RemoveFromWatchlistFailureMessage);
+                TempData[ErrorTempDataKey] = RemoveFromWatchlistFailureMessage;
 
                 return RedirectToAction(nameof(Index));
             }

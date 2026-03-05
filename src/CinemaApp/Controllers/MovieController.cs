@@ -4,8 +4,8 @@
     using Services.Core.Contracts;
     using Services.Models.Movie;
     using ViewModels.Movie;
-    using static GCommon.OutputMessages.Movie;
     using static GCommon.ApplicationConstants;
+    using static GCommon.OutputMessages.Movie;
 
     using AutoMapper;
     using Microsoft.AspNetCore.Authorization;
@@ -63,17 +63,17 @@
             catch (EntityPersistFailureException ecpfe)
             {
                 logger.LogError(ecpfe, string.Format(CrudMovieFailureMessage, nameof(Create)));
-                ModelState.AddModelError(string.Empty, string.Format(CrudMovieFailureMessage, "creating"));
+                TempData[ErrorTempDataKey] = string.Format(CrudMovieFailureMessage, "creating");
 
-                return View(formModel);
+                return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
                 logger.LogError(ex, UnexpectedErrorMessage);
-                ModelState.AddModelError(string.Empty, UnexpectedErrorMessage);
+                TempData[ErrorTempDataKey] = UnexpectedErrorMessage;
 
                 // TODO: Redirect after implementing JS Notifications
-                return View(formModel);
+                return RedirectToAction(nameof(Index));
             }
 
             // TODO: Redirect to Manage after implementing Roles
@@ -148,11 +148,11 @@
             catch (EntityPersistFailureException epfe)
             {
                 logger.LogError(epfe, string.Format(CrudMovieFailureMessage, nameof(Edit)));
-                ModelState.AddModelError(string.Empty, string.Format(CrudMovieFailureMessage, "editing"));
+                TempData[ErrorTempDataKey] = string.Format(CrudMovieFailureMessage, "editing");
 
-                return View(formModel);
+                return RedirectToAction(nameof(Index));
             }
-
+            
             return RedirectToAction(nameof(Details), new { id });
         }
 
@@ -195,9 +195,9 @@
             catch (EntityPersistFailureException epfe)
             {
                 logger.LogError(epfe, string.Format(CrudMovieFailureMessage, nameof(Delete)));
-                ModelState.AddModelError(string.Empty, string.Format(CrudMovieFailureMessage, "deleting"));
+                TempData[ErrorTempDataKey] = string.Format(CrudMovieFailureMessage, "deleting");
 
-                return View(deleteDetailsVm);
+                return RedirectToAction(nameof(Index));
             }
 
             return RedirectToAction(nameof(Index));
