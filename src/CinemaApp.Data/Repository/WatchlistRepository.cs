@@ -33,7 +33,7 @@
         {
             UserMovie? userMovie = await DbContext!
                 .UsersMovies
-                .SingleOrDefaultAsync(um => um.UserId.ToLower() == userId.ToLower() &&
+                .SingleOrDefaultAsync(um => um.UserId == userId &&
                                             um.MovieId == movieId);
 
             return userMovie;

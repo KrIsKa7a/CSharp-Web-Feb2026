@@ -42,7 +42,7 @@
                     ImageUrl = m.ImageUrl ?? DefaultImageUrl,
                 });
             IEnumerable<UserMovie> allUserMovies = (await watchlistRepository
-                .GetAllUserMoviesAsync())
+                .GetAllUserMoviesAsync(um => um.UserId == userId))
                 .ToHashSet();
 
             // Process data

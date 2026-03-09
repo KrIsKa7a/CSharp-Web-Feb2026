@@ -176,7 +176,7 @@
         }
 
         [HttpPost]
-        public async Task<IActionResult> Delete([FromRoute] Guid id, MovieDetailsViewModel? deleteDetailsVm)
+        public async Task<IActionResult> Delete([FromRoute] Guid id, MovieDeleteViewModel? deleteDetailsVm)
         {
             if (id == Guid.Empty)
             {
