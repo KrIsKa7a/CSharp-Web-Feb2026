@@ -3,41 +3,167 @@
     using System.Globalization;
 
     using Contracts;
-    using Data;
+    using Data.Models;
+    using Data.Repository.Contracts;
+    using GCommon.Exceptions;
+    using Models.Movie;
     using Web.ViewModels.Movie;
     using static GCommon.ApplicationConstants;
 
-    using Microsoft.EntityFrameworkCore;
+    using AutoMapper;
 
     public class MovieService : IMovieService
     {
-        private readonly CinemaAppDbContext dbContext;
+        private readonly IMovieRepository movieRepository;
+        private readonly IWatchlistRepository watchlistRepository;
 
-        public MovieService(CinemaAppDbContext dbContext)
+        private readonly IMapper mapper;
+
+        public MovieService(IMovieRepository movieRepository, IWatchlistRepository watchlistRepository, IMapper mapper)
         {
-            this.dbContext = dbContext;
+            this.movieRepository = movieRepository;
+            this.watchlistRepository = watchlistRepository;
+
+            this.mapper = mapper;
         }
 
-        public async Task<IEnumerable<AllMoviesIndexViewModel>> GetAllMoviesOrderedByTitleAsync()
+        public async Task<IEnumerable<MovieAllDto>> GetAllMoviesOrderedByTitleAsync(string? userId = null)
         {
-            IEnumerable<AllMoviesIndexViewModel> allMoviesViewModel = await dbContext
-                .Movies
-                .AsNoTracking()
-                .Select(m => new AllMoviesIndexViewModel()
+			// TODO: Use DTOs for data transfers between Data-Service-Controller layers instead of coupling Service to ViewModels
+			// Fetch data
+			IEnumerable<Movie> allMoviesDb = await movieRepository
+                .GetAllMoviesNoTrackingWithProjectionAsync(m => new Movie()
                 {
                     Id = m.Id,
                     Title = m.Title,
                     Genre = m.Genre,
-                    ReleaseDate = m.ReleaseDate.ToString(DefaultDateFormat, CultureInfo.InvariantCulture),
+                    ReleaseDate = m.ReleaseDate,
                     Director = m.Director,
-                    ImageUrl = m.ImageUrl ?? DefaultImageUrl
-                })
+                    ImageUrl = m.ImageUrl ?? DefaultImageUrl,
+                });
+            IEnumerable<UserMovie> allUserMovies = (await watchlistRepository
+                .GetAllUserMoviesAsync(um => um.UserId == userId))
+                .ToHashSet();
+
+            // Process data
+            IEnumerable<MovieAllDto> allMoviesDtos = mapper
+                .Map<IEnumerable<MovieAllDto>>(allMoviesDb)
                 .OrderBy(m => m.Title)
                 .ThenBy(m => m.Genre)
                 .ThenBy(m => m.Director)
-                .ToArrayAsync();
+                .ToArray();
+            if (!string.IsNullOrWhiteSpace(userId))
+            {
+                foreach (MovieAllDto movieDto in allMoviesDtos)
+                {
+                    movieDto.IsInUserWatchlist = allUserMovies
+                        .Any(um => um.MovieId == movieDto.Id && 
+                                   um.UserId.ToLowerInvariant() == userId.ToLowerInvariant());
+                }
+            }
 
-            return allMoviesViewModel;
+            // Return processed data
+            return allMoviesDtos;
+        }
+
+        public async Task CreateMovieAsync(MovieDetailsDto movieDetailsDto)
+        {
+            Movie newMovie = mapper
+                .Map<Movie>(movieDetailsDto);
+
+            bool successAdd = await movieRepository.AddMovieAsync(newMovie);
+            if (!successAdd)
+            {
+                throw new EntityPersistFailureException();
+            }
+        }
+
+        public async Task<MovieDetailsDto?> GetMovieDetailsByIdAsync(Guid id)
+        {
+	        Movie? movieDb = await movieRepository
+		        .GetMovieByIdAsync(id);
+
+	        if (movieDb == null)
+	        {
+		        return null;
+	        }
+
+            return mapper.Map<MovieDetailsDto>(movieDb);
+        }
+
+        public async Task<MovieDetailsDto?> GetMovieFormModelByIdAsync(Guid id)
+        {
+            Movie? movieDb = await movieRepository
+                .GetMovieByIdAsync(id);
+
+            if (movieDb == null)
+            {
+                return null;
+            }
+
+            return mapper
+                .Map<MovieDetailsDto>(movieDb);
+        }
+
+        public async Task<bool> ExistsByIdAsync(Guid id)
+        {
+            return await movieRepository.ExistsByIdAsync(id);
+        }
+
+        public async Task EditMovieAsync(Guid id, MovieDetailsDto movieDetailsDto)
+        {
+            Movie? movieDb = await movieRepository
+                .GetMovieByIdAsync(id);
+            if (movieDb == null)
+            {
+                throw new EntityNotFoundException();
+            }
+
+            movieDb.Title = movieDetailsDto.Title;
+            movieDb.Genre = movieDetailsDto.Genre;
+            movieDb.ReleaseDate = movieDetailsDto.ReleaseDate;
+            movieDb.Description = movieDetailsDto.Description;
+            movieDb.Duration = movieDetailsDto.Duration;
+            movieDb.Director = movieDetailsDto.Director;
+            movieDb.ImageUrl = movieDetailsDto.ImageUrl;
+            
+            bool editSuccess = await movieRepository.EditMovieAsync(movieDb);
+            if (!editSuccess)
+            {
+                throw new EntityPersistFailureException();
+            }
+        }
+
+        public async Task SoftDeleteMovieAsync(Guid id)
+        {
+            Movie? movieDb = await movieRepository
+                .GetMovieByIdAsync(id);
+            if (movieDb == null)
+            {
+                throw new EntityNotFoundException();
+            }
+
+            bool deleteSuccess = await movieRepository.SoftDeleteMovieAsync(movieDb);
+            if (!deleteSuccess)
+            {
+                throw new EntityPersistFailureException();
+            }
+        }
+
+        public async Task HardDeleteMovieAsync(Guid id)
+        {
+            Movie? movieDb = await movieRepository
+                .GetMovieByIdAsync(id);
+            if (movieDb == null)
+            {
+                throw new EntityNotFoundException();
+            }
+
+            bool deleteSuccess = await movieRepository.HardDeleteMovieAsync(movieDb);
+            if (!deleteSuccess)
+            {
+                throw new EntityPersistFailureException();
+            }
         }
     }
 }

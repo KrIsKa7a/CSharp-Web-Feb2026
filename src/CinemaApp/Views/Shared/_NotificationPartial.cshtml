@@ -1,0 +1,18 @@
+﻿@using static CinemaApp.GCommon.ApplicationConstants
+
+@if (TempData[ErrorTempDataKey] != null)
+{
+    <script>toastr.error("@Json.Serialize(TempData[ErrorTempDataKey])")</script>
+}
+else if (TempData[SuccessTempDataKey] != null)
+{
+    <script>toastr.success("@Json.Serialize(TempData[SuccessTempDataKey])")</script>
+}
+else if (TempData[InfoTempDataKey] != null)
+{
+    <script>toastr.info("@Json.Serialize(TempData[InfoTempDataKey])")</script>
+}
+else if (TempData[WarningTempDataKey] != null)
+{
+    <script>toastr.warning("@Json.Serialize(TempData[WarningTempDataKey])")</script>
+}
