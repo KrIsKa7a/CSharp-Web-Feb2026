@@ -1,10 +1,12 @@
 ﻿namespace CinemaApp.Data.Repository.Contracts
 {
+    using System.Linq.Expressions;
+    
     using Models;
 
     public interface IWatchlistRepository
     {
-        Task<IEnumerable<UserMovie>> GetAllUserMoviesAsync();
+        Task<IEnumerable<UserMovie>> GetAllUserMoviesAsync(Expression<Func<UserMovie, bool>>? filterQuery = null);
 
         Task<UserMovie?> GetUserMovieAsync(string userId, Guid movieId);
 

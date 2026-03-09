@@ -71,8 +71,7 @@
             {
                 logger.LogError(ex, UnexpectedErrorMessage);
                 TempData[ErrorTempDataKey] = UnexpectedErrorMessage;
-
-                // TODO: Redirect after implementing JS Notifications
+                
                 return RedirectToAction(nameof(Index));
             }
 

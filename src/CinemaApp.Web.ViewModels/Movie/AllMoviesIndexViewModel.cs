@@ -28,7 +28,8 @@
         {
             configuration.CreateMap<MovieAllDto, AllMoviesIndexViewModel>()
                 .ForMember(d => d.ReleaseDate,
-                    y => y.MapFrom(s => s.ReleaseDate.ToString(DefaultDateFormat, CultureInfo.InvariantCulture)));
+                    y => y.MapFrom(s => s.ReleaseDate.ToString(DefaultDateFormat, CultureInfo.InvariantCulture)))
+                .ForMember(d => d.ImageUrl, opt => opt.MapFrom(s => s.ImageUrl ?? DefaultImageUrl));
         }
     }
 }

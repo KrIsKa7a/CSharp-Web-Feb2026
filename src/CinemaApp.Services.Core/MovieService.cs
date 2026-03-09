@@ -39,8 +39,11 @@
                     Genre = m.Genre,
                     ReleaseDate = m.ReleaseDate,
                     Director = m.Director,
-                    ImageUrl = m.ImageUrl
+                    ImageUrl = m.ImageUrl ?? DefaultImageUrl,
                 });
+            IEnumerable<UserMovie> allUserMovies = (await watchlistRepository
+                .GetAllUserMoviesAsync())
+                .ToHashSet();
 
             // Process data
             IEnumerable<MovieAllDto> allMoviesDtos = mapper
@@ -53,8 +56,9 @@
             {
                 foreach (MovieAllDto movieDto in allMoviesDtos)
                 {
-                    movieDto.IsInUserWatchlist = await watchlistRepository
-                        .ExistsAsync(userId, movieDto.Id);
+                    movieDto.IsInUserWatchlist = allUserMovies
+                        .Any(um => um.MovieId == movieDto.Id && 
+                                   um.UserId.ToLowerInvariant() == userId.ToLowerInvariant());
                 }
             }
 

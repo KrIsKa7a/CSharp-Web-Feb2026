@@ -1,5 +1,7 @@
 ﻿namespace CinemaApp.Data.Repository
 {
+    using System.Linq.Expressions;
+
     using Contracts;
     using Models;
 
@@ -13,16 +15,16 @@
 
         }
 
-        public async Task<IEnumerable<Movie>> GetAllMoviesNoTrackingWithProjectionAsync(Func<Movie, Movie>? projectFunc = null)
+        public async Task<IEnumerable<Movie>> GetAllMoviesNoTrackingWithProjectionAsync(Expression<Func<Movie, Movie>>? projectionQuery = null)
         {
-            IQueryable<Movie> moviesFetchQuery = DbContext
+            IQueryable<Movie> moviesFetchQuery = DbContext!
                 .Movies
                 .AsNoTracking()
                 .OrderBy(m => m.Title);
-            if (projectFunc != null)
+            if (projectionQuery != null)
             {
                 moviesFetchQuery = moviesFetchQuery
-                    .Select(m => projectFunc(m))
+                    .Select(projectionQuery)
                     .AsQueryable();
             }
 
@@ -31,7 +33,7 @@
 
         public async Task<IEnumerable<Movie>> GetAllMoviesAsync()
         {
-            return await DbContext
+            return await DbContext!
                 .Movies
                 .AsNoTracking()
                 .OrderBy(m => m.Title)
@@ -40,14 +42,14 @@
 
         public async Task<Movie?> GetMovieByIdAsync(Guid id)
         {
-	        return await DbContext
+	        return await DbContext!
                 .Movies
 		        .FindAsync(id);
         }
 
         public async Task<bool> AddMovieAsync(Movie movie)
         {
-            await DbContext.Movies.AddAsync(movie);
+            await DbContext!.Movies.AddAsync(movie);
             int resultCount = await SaveChangesAsync();
             
             return resultCount == 1;
@@ -55,7 +57,7 @@
 
         public async Task<bool> EditMovieAsync(Movie movie)
         {
-            DbContext.Movies.Update(movie);
+            DbContext!.Movies.Update(movie);
             int resultCount = await SaveChangesAsync();
 
             return resultCount == 1;
@@ -64,7 +66,7 @@
         public async Task<bool> SoftDeleteMovieAsync(Movie movie)
         {
             movie.IsDeleted = true;
-            DbContext.Movies.Update(movie);
+            DbContext!.Movies.Update(movie);
 
             int resultCount = await SaveChangesAsync();
 
@@ -73,7 +75,7 @@
 
         public async Task<bool> HardDeleteMovieAsync(Movie movie)
         {
-            DbContext.Movies.Remove(movie);
+            DbContext!.Movies.Remove(movie);
             int resultCount = await SaveChangesAsync();
 
             return resultCount == 1;
@@ -81,7 +83,7 @@
 
         public async Task<bool> ExistsByIdAsync(Guid id)
         {
-            return await DbContext
+            return await DbContext!
                 .Movies
                 .AnyAsync(m => m.Id == id);
         }

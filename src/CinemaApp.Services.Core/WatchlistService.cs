@@ -25,11 +25,8 @@
 
         public async Task<IEnumerable<WatchlistMovieDto>> GetUserWatchlistByIdAsync(string userId)
         {
-            IEnumerable<Movie> userWatchlist = watchlistRepository
-                .GetAllUserMoviesAsync()
-                .GetAwaiter()
-                .GetResult()
-                .Where(um => um.UserId.ToLower() == userId.ToLower())
+            IEnumerable<Movie> userWatchlist = (await watchlistRepository
+                .GetAllUserMoviesAsync(um => um.UserId == userId))
                 .Select(um => um.Movie)
                 .ToArray();
 

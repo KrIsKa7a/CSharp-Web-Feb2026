@@ -3,19 +3,19 @@
     public abstract class BaseRepository : IDisposable
     {
         private bool isDisposed = false;
-        private readonly CinemaAppDbContext dbContext;
+        private readonly CinemaAppDbContext? dbContext;
 
         protected BaseRepository(CinemaAppDbContext dbContext)
         {
             this.dbContext = dbContext;
         }
 
-        protected CinemaAppDbContext DbContext 
+        protected CinemaAppDbContext? DbContext 
             => dbContext;
 
         protected async Task<int> SaveChangesAsync()
         {
-            return await DbContext.SaveChangesAsync();
+            return await DbContext!.SaveChangesAsync();
         }
 
         public void Dispose()
@@ -30,7 +30,7 @@
             {
                 if (disposing)
                 {
-                    dbContext.Dispose();
+                    dbContext?.Dispose();
                 }
             }
             isDisposed = true;

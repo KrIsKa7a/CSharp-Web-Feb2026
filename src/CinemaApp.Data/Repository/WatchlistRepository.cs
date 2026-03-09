@@ -1,5 +1,7 @@
 ﻿namespace CinemaApp.Data.Repository
 {
+    using System.Linq.Expressions;
+
     using Contracts;
     using Models;
 
@@ -13,20 +15,23 @@
             
         }
 
-        public async Task<IEnumerable<UserMovie>> GetAllUserMoviesAsync()
+        public async Task<IEnumerable<UserMovie>> GetAllUserMoviesAsync(Expression<Func<UserMovie, bool>>? filterQuery = null)
         {
-            IEnumerable<UserMovie> userMovies = await DbContext
+            IQueryable<UserMovie> userMovies = DbContext!
                 .UsersMovies
                 .AsNoTracking()
-                .Include(um => um.Movie)
-                .ToArrayAsync();
+                .Include(um => um.Movie);
+            if (filterQuery != null)
+            {
+                userMovies = userMovies.Where(filterQuery);
+            }
 
-            return userMovies;
+            return await userMovies.ToArrayAsync();
         }
 
         public async Task<UserMovie?> GetUserMovieAsync(string userId, Guid movieId)
         {
-            UserMovie? userMovie = await DbContext
+            UserMovie? userMovie = await DbContext!
                 .UsersMovies
                 .SingleOrDefaultAsync(um => um.UserId.ToLower() == userId.ToLower() &&
                                             um.MovieId == movieId);
@@ -36,10 +41,10 @@
 
         public async Task<UserMovie?> GetUserMovieIncludeDeletedAsync(string userId, Guid movieId)
         {
-            UserMovie? userMovie = await DbContext
+            UserMovie? userMovie = await DbContext!
                 .UsersMovies
                 .IgnoreQueryFilters()
-                .SingleOrDefaultAsync(um => um.UserId.ToLower() == userId.ToLower() &&
+                .SingleOrDefaultAsync(um => um.UserId == userId &&
                                             um.MovieId == movieId);
 
             return userMovie;
@@ -47,17 +52,17 @@
 
         public async Task<bool> ExistsAsync(string userId, Guid movieId)
         {
-            bool watchListEntryExist = await DbContext
+            bool watchListEntryExist = await DbContext!
                 .UsersMovies
                 
-                .AnyAsync(um => um.UserId.ToLower() == userId.ToLower() && um.MovieId == movieId);
+                .AnyAsync(um => um.UserId == userId && um.MovieId == movieId);
 
             return watchListEntryExist;
         }
 
         public async Task<bool> AddUserMovieAsync(UserMovie userMovie)
         {
-            await DbContext.UsersMovies.AddAsync(userMovie);
+            await DbContext!.UsersMovies.AddAsync(userMovie);
             int resultCount = await SaveChangesAsync();
 
             return resultCount == 1;
@@ -65,7 +70,7 @@
 
         public async Task<bool> UpdateUserMovieAsync(UserMovie userMovie)
         {
-            DbContext.UsersMovies.Update(userMovie);
+            DbContext!.UsersMovies.Update(userMovie);
 
             int resultCount = await SaveChangesAsync();
 
@@ -75,7 +80,7 @@
         public async Task<bool> SoftDeleteUserMovieAsync(UserMovie userMovie)
         {
             userMovie.IsDeleted = true;
-            DbContext.UsersMovies.Update(userMovie);
+            DbContext!.UsersMovies.Update(userMovie);
 
             int resultCount = await SaveChangesAsync();
 
