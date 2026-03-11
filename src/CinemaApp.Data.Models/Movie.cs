@@ -36,5 +36,8 @@
 
         public virtual ICollection<UserMovie> MovieUsersWatchlist { get; set; }
             = new List<UserMovie>();
+
+        public virtual ICollection<Projection> Projections { get; set; }
+            = new HashSet<Projection>();
     }
 }
