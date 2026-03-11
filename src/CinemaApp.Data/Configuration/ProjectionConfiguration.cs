@@ -21,6 +21,7 @@
 
         private IEnumerable<Projection> SeedProjections()
         {
+            // TODO: Don't use DateTime.Now to prevent issues with Migrations. Use fixed DateTime values instead.
             return new List<Projection>
             {
                 new Projection

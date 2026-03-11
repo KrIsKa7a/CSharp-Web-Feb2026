@@ -19,5 +19,7 @@
         public string UserId { get; set; } = null!;
 
         public virtual IdentityUser User { get; set; } = null!;
+
+        public int Quantity { get; set; }
     }
 }
