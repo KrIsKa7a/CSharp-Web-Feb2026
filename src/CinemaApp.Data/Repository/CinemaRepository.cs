@@ -44,5 +44,16 @@
 
             return result;
         }
+
+        public async Task<Cinema?> GetCinemaByIdIncludeMovies(Guid cinemaId)
+        {
+            Cinema? cinema = await DbContext!
+                .Cinemas
+                .Include(c => c.Projections)
+                .ThenInclude(p => p.Movie)
+                .SingleOrDefaultAsync(c => c.Id == cinemaId);
+
+            return cinema;
+        }
     }
 }

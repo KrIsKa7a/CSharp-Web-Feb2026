@@ -31,5 +31,22 @@
 
             return View(cinemaIndexViewModels);
         }
+
+        [AllowAnonymous]
+        [HttpGet]
+        public async Task<IActionResult> Program([FromRoute(Name = "id")] Guid cinemaId)
+        {
+            CinemaProgramDetailsDto? cinemaProgramDetailsDto = await cinemaService
+                .GetCinemaProgramByIdAsync(cinemaId);
+            if (cinemaProgramDetailsDto == null)
+            {
+                return NotFound();
+            }
+
+            CinemaProgramViewModel cinemaProgramViewModel = mapper
+                .Map<CinemaProgramViewModel>(cinemaProgramDetailsDto);
+
+            return View(cinemaProgramViewModel);
+        }
     }
 }

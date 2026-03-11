@@ -37,5 +37,20 @@
 
             return cinemaDtos;
         }
+
+        public async Task<CinemaProgramDetailsDto?> GetCinemaProgramByIdAsync(Guid cinemaId)
+        {
+            Cinema? cinema = await cinemaRepository
+                .GetCinemaByIdIncludeMovies(cinemaId);
+            if (cinema == null)
+            {
+                return null;
+            }
+
+            CinemaProgramDetailsDto cinemaProgramDto = mapper
+                .Map<CinemaProgramDetailsDto>(cinema);
+            
+            return cinemaProgramDto;
+        }
     }
 }
