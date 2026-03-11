@@ -20,12 +20,6 @@
 	
 	@await RenderSectionAsync("Styles", false)
 
-    @* TODO: Implement using Sections *@
-	@* @if (ViewData["Title"] != null && ViewData["Title"].ToString() == "Explore Cinemas")
-	{
-		<link rel="stylesheet" href="~/css/cinema.css" asp-append-version="true" />
-	} *@
-
 </head>
 <body>
 <header>
@@ -41,6 +35,11 @@
             </button>
             <div class="navbar-collapse collapse d-lg-inline-flex justify-content-between">
                 <ul class="navbar-nav flex-grow-1">
+                    <li class="nav-item">
+                        <a class="nav-link text-light" asp-area="" asp-controller="Cinema" asp-action="Index">
+                            <i class="bi bi-film"></i> Cinemas
+                        </a>
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link text-light" asp-area="" asp-controller="Movie" asp-action="Index">
                             <i class="bi bi-camera-reels"></i> Movies
