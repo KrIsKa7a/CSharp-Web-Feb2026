@@ -23,27 +23,17 @@
             this.projectionService = projectionService;
         }
 
-        [Route("BuyTicket")]
+        [HttpPost("BuyTicket")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public async Task<ActionResult> BuyTicket(BuyTicketInputModel inputModel)
+        public async Task<ActionResult> BuyTicket([FromBody] BuyTicketInputModel inputModel)
         {
             try
             {
-                Guid? projectionId = await projectionService
-                    .GetProjectionIdByMovieCinemaAndShowtimeAsync(
-                        inputModel.MovieId,
-                        inputModel.CinemaId,
-                        inputModel.Showtime);
-                if (projectionId == null)
-                {
-                    return NotFound();
-                }
-                
                 string userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
                 bool isBought = await ticketService
-                    .BuyTicketAsync(projectionId.Value, userId, inputModel.Quantity);
+                    .BuyTicketAsync(inputModel.ProjectionId, userId, inputModel.Quantity);
                 if (!isBought)
                 {
                     return BadRequest();

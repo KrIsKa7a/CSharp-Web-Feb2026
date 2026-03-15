@@ -1,6 +1,5 @@
-﻿document.addEventListener("DOMContentLoaded", function () {
-    console.log("✅ DOM fully loaded and parsed.");
-
+﻿// TODO: Fix AI generated JS code
+document.addEventListener("DOMContentLoaded", function () {
     const modalElement = document.getElementById("movieDetailsModal");
     if (!modalElement) {
         console.error("❌ Error: Modal element #movieDetailsModal not found!");
@@ -22,7 +21,6 @@
             event.stopPropagation();
 
             let movieId = this.getAttribute("data-movie-id");
-            console.log(`🎬 Fetching details for movie ID: ${movieId}`);
 
             fetch(`/Movie/DetailsPartial/${movieId}`)
                 .then(response => {
@@ -32,8 +30,6 @@
                     return response.text();
                 })
                 .then(data => {
-                    console.log("📥 Movie details received:", data);
-
                     detailsContainer.innerHTML = data;
 
                     let movieTitleElement = detailsContainer.querySelector("h3");
@@ -79,8 +75,6 @@
 
     function attachDynamicEventListeners() {
         setTimeout(() => {
-            console.log("🔄 Attaching dynamic event listeners...");
-
             $("#add-to-watchlist-btn").off("click").on("click", function () {
                 let movieId = $(this).data("movie-id");
 
@@ -89,7 +83,7 @@
                     return;
                 }
 
-                $.post("/Watchlist/AddToWatchlist", { movieId: movieId })
+                $.get(`/Watchlist/Add/${movieId}`)
                     .done(function () {
                         Swal.fire({
                             title: "Added!",
@@ -124,7 +118,7 @@ $(document).ready(function () {
             return;
         }
 
-        $.post("/Watchlist/AddToWatchlist", { movieId: movieId })
+        $.get(`/Watchlist/Add/${movieId}`)
             .done(function () {
                 Swal.fire({
                     title: "Added!",

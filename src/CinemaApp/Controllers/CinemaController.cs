@@ -8,7 +8,7 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
-    public class CinemaController : Controller
+    public class CinemaController : BaseController
     {
         private readonly ICinemaService cinemaService;
 

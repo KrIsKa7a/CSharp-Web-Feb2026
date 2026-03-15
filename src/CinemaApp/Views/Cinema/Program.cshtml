@@ -32,10 +32,11 @@
                             <p class="card-text text-muted small">Director: @movie.Director</p>
 
                             <div class="d-flex flex-column gap-2 mt-3">
-                                <button class="btn btn-primary rounded-pill view-details-btn fw-bold"
+                                @* TODO: Implement Movie Details partial view *@
+                                @* <button class="btn btn-primary rounded-pill view-details-btn fw-bold"
                                         data-movie-id="@movie.Id">
                                     <i class="fas fa-eye"></i> View Details
-                                </button>
+                                </button> *@
 
                                 @if (User.Identity.IsAuthenticated && !User.IsInRole("Admin") && !User.IsInRole("Manager"))
                                 {

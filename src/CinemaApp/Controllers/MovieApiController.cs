@@ -1,8 +1,12 @@
 ﻿namespace CinemaApp.Web.Controllers
 {
+    using Services.Core.Contracts;
+    using Services.Models.Projection;
+    using ViewModels.Movie.ApiModels;
+
+    using AutoMapper;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
-    using Services.Core.Contracts;
 
     [Route("api/[controller]")]
     [Authorize]
@@ -11,20 +15,22 @@
     {
         private readonly IProjectionService projectionService;
 
-        public MovieApiController(IProjectionService projectionService)
+        private readonly IMapper mapper;
+
+        public MovieApiController(IProjectionService projectionService, IMapper mapper)
         {
             this.projectionService = projectionService;
+            this.mapper = mapper;
         }
 
-        [Route("GetShowTimes")]
-        [ProducesResponseType(typeof(IEnumerable<string>), 200)]
-        public async Task<ActionResult<IEnumerable<string>>> GetShowTimes(Guid movieId, Guid cinemaId)
+        [HttpGet("GetShowTimes")]
+        [ProducesResponseType(typeof(IEnumerable<MovieShowtimesApiResponseModel>), 200)]
+        public async Task<ActionResult<IEnumerable<MovieShowtimesApiResponseModel>>> GetShowTimes(Guid movieId, Guid cinemaId)
         {
-            IEnumerable<DateTime> showTimes = await projectionService
+            IEnumerable<ProjectionShowtimeDto> showTimes = await projectionService
                 .GetProjectionAvailableShowtimesAsync(movieId, cinemaId);
-            IEnumerable<string> showTimesResult = showTimes
-                .Select(st => st.ToString("g"))
-                .ToArray();
+            IEnumerable<MovieShowtimesApiResponseModel> showTimesResult = mapper
+                .Map<IEnumerable<MovieShowtimesApiResponseModel>>(showTimes);
 
             return this.Ok(showTimesResult);
         }

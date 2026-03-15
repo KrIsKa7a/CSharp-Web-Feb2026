@@ -17,7 +17,7 @@
         {
             configuration
                 .CreateMap<Cinema, CinemaProgramDetailsDto>()
-                .ForMember(d => d.ProjectionMovies, opt => opt.MapFrom(s => s.Projections.Select(p => p.Movie)));
+                .ForMember(d => d.ProjectionMovies, opt => opt.MapFrom(s => s.Projections.Select(p => p.Movie).DistinctBy(m => m.Id)));
         }
     }
 }

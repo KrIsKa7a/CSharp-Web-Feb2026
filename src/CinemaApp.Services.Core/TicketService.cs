@@ -24,7 +24,7 @@
                 return false;
             }
 
-            if (projection.AvailableTickets < quantity)
+            if (quantity <= 0 || projection.AvailableTickets < quantity)
             {
                 return false;
             }
@@ -36,12 +36,7 @@
                 Quantity = quantity,
             };
 
-            bool success = await ticketRepository.AddTicketAsync(newTicket);
-            if (success)
-            {
-                projection.AvailableTickets -= quantity;
-                success &= await projectionRepository.EditProjectionAsync(projection);
-            }
+            bool success = await ticketRepository.AddTicketAsync(newTicket, projectionId);
 
             return success;
         }

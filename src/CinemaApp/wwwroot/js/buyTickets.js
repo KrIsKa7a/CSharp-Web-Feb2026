@@ -5,11 +5,6 @@
         const movieId = $(this).attr("data-movie-id");
         const movieName = $(this).attr("data-movie-name");
 
-        console.log("Cinema ID:", cinemaId);
-        console.log("Cinema Name:", cinemaName);
-        console.log("Movie ID:", movieId);
-        console.log("Movie Name:", movieName);
-
         if (!cinemaId || !movieId) {
             Swal.fire("Error!", "Missing Cinema ID or Movie ID.", "error");
             return;
@@ -28,8 +23,8 @@
             url: `/api/MovieApi/GetShowTimes?movieId=${movieId}&cinemaId=${cinemaId}`,
             method: "GET",
             success: function (response) {
-                for (const showtime of response) {
-                    showTimesSelect.append(new Option(showtime, showtime));
+                for (const showtimeDto of response) {
+                    showTimesSelect.append(new Option(showtimeDto.showtime, showtimeDto.id));
                 }
             },
             error: function (xhr) {
@@ -51,7 +46,10 @@
 
         });
 
-        $("#buyTicketModalLabel").html(`Buy Ticket - ${cinemaName} <br><small class="text-muted">${movieName}</small>`);
+        $("#buyTicketModalLabel")
+            .text(`Buy Ticket - ${cinemaName} `)
+            .append($("<br>"))
+            .append($("<small>").addClass("text-muted").text(movieName));
 
         $("#buyTicketModal").modal("show");
     });
@@ -61,10 +59,8 @@
             cinemaId: $("#cinemaId").val().trim(),
             movieId: $("#movieId").val().trim(),
             quantity: parseInt($("#quantity").val(), 10),
-            showTime: $("#showtime").find(":selected").val()
+            projectionId: $("#showtime").find(":selected").val()
         };
-
-        console.log("Submitting Request:", requestData); // ✅ Added for Debugging
 
         if (!requestData.quantity || requestData.quantity < 1) {
             $("#errorMessage").text("Please enter a valid ticket quantity.").removeClass("d-none");
@@ -77,7 +73,6 @@
             contentType: "application/json",
             data: JSON.stringify(requestData),
             success: function (response) {
-                console.log("Success Response:", response); // ✅ Log the success response
                 Swal.fire("Success!", "Your ticket has been purchased successfully!", "success");
                 $("#buyTicketModal").modal("hide");
             },
@@ -97,7 +92,6 @@
 
                 Swal.fire("Error!", errorMessage, "error");
             }
-
         });
     });
 });

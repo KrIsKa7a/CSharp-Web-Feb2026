@@ -8,6 +8,6 @@
 
         public int Quantity { get; set; }
 
-        public string Showtime { get; set; } = null!;
+        public Guid ProjectionId { get; set; }
     }
 }

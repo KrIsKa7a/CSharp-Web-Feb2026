@@ -1,9 +1,9 @@
 ﻿namespace CinemaApp.Services.Core.Contracts
 {
+    using Models.Projection;
+
     public interface IProjectionService
     {
-        Task<IEnumerable<DateTime>> GetProjectionAvailableShowtimesAsync(Guid movieId, Guid cinemaId);
-
-        Task<Guid?> GetProjectionIdByMovieCinemaAndShowtimeAsync(Guid movieId, Guid cinemaId, string showtime);
+        Task<IEnumerable<ProjectionShowtimeDto>> GetProjectionAvailableShowtimesAsync(Guid movieId, Guid cinemaId);
     }
 }

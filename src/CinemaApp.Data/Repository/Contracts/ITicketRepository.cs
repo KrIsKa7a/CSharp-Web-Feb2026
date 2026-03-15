@@ -4,6 +4,6 @@
 
     public interface ITicketRepository
     {
-        Task<bool> AddTicketAsync(Ticket ticket);
+        Task<bool> AddTicketAsync(Ticket ticket, Guid projectionId);
     }
 }
