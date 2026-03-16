@@ -42,7 +42,7 @@
                     ImageUrl = m.ImageUrl ?? DefaultImageUrl,
                 });
             IEnumerable<UserMovie> allUserMovies = (await watchlistRepository
-                .GetAllUserMoviesAsync(um => um.UserId == userId))
+                .GetAllUserMoviesAsync(um => um.UserId.ToString() == userId))
                 .ToHashSet();
 
             // Process data
@@ -58,7 +58,7 @@
                 {
                     movieDto.IsInUserWatchlist = allUserMovies
                         .Any(um => um.MovieId == movieDto.Id && 
-                                   um.UserId.ToLowerInvariant() == userId.ToLowerInvariant());
+                                   um.UserId.ToString().ToLowerInvariant() == userId.ToLowerInvariant());
                 }
             }
 

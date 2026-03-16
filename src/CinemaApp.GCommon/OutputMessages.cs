@@ -37,5 +37,10 @@
             public const string AddToWatchlistFailureMessage = "An error occurred while adding the movie to your watchlist. Please try again in a few minutes.";
             public const string RemoveFromWatchlistFailureMessage = "An error occurred while removing the movie from your watchlist. Please try again in a few minutes.";
         }
+
+        public static class ApplicationUser
+        {
+            public const string UserAgeBelowMinimumMessage = "Users must be at least {0} years old!";
+        }
     }
 }

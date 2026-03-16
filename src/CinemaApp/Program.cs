@@ -1,11 +1,10 @@
 namespace CinemaApp.Web
 {
     using Data;
+    using Data.Models;
     using Data.Repository;
-    using Data.Repository.Contracts;
     using Infrastructure.Extensions;
     using Services.Core;
-    using Services.Core.Contracts;
     using Services.Mapping;
     using Services.Models.Movie;
     using ViewModels.Movie;
@@ -35,10 +34,11 @@ namespace CinemaApp.Web
             builder.Services.AddSingleton(AutoMapperConfig.MapperInstance);
 
             builder.Services
-                .AddDefaultIdentity<IdentityUser>(options =>
+                .AddDefaultIdentity<ApplicationUser>(options =>
                 {
                     ConfigureIdentity(builder.Configuration, options);
                 })
+                .AddRoles<IdentityRole<Guid>>()
                 .AddEntityFrameworkStores<CinemaAppDbContext>();
             builder.Services.AddControllersWithViews();
 
