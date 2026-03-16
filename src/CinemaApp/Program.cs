@@ -3,6 +3,8 @@ namespace CinemaApp.Web
     using Data;
     using Data.Models;
     using Data.Repository;
+    using Data.Seeding;
+    using Data.Seeding.Contracts;
     using Infrastructure.Extensions;
     using Services.Core;
     using Services.Mapping;
@@ -30,6 +32,8 @@ namespace CinemaApp.Web
 
             builder.Services.RegisterRepositories(typeof(MovieRepository));
             builder.Services.RegisterUserServices(typeof(MovieService));
+
+            builder.Services.AddTransient<IIdentitySeeder, IdentitySeeder>();
 
             builder.Services.AddSingleton(AutoMapperConfig.MapperInstance);
 
@@ -63,6 +67,9 @@ namespace CinemaApp.Web
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseRolesSeeder();
+            app.UseAdminUserSeeder();
 
             app.UseStatusCodePagesWithRedirects("/Home/Error/{0}");
 
