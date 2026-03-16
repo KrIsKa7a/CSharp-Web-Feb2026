@@ -10,7 +10,7 @@
     public class IdentitySeeder : IIdentitySeeder
     {
         // ReSharper disable once InconsistentNaming
-        private readonly string[] ApplicationRoles = new[]
+        public static string[] ApplicationRoles = new[]
         {
             "Admin",
             "Moderator",
