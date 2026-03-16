@@ -17,14 +17,9 @@
     
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js" integrity="sha512-lbwH47l/tPXJYG9AcFNoJaTMhGvYWhVM9YI43CT+uteTRRaiLCui8snIgyAN8XWgNjNhCqlAUdzZptso6OCoFQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-	
-	@await RenderSectionAsync("Styles", false)
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    @* TODO: Implement using Sections *@
-	@* @if (ViewData["Title"] != null && ViewData["Title"].ToString() == "Explore Cinemas")
-	{
-		<link rel="stylesheet" href="~/css/cinema.css" asp-append-version="true" />
-	} *@
+    @await RenderSectionAsync("Styles", false)
 
 </head>
 <body>
@@ -41,6 +36,11 @@
             </button>
             <div class="navbar-collapse collapse d-lg-inline-flex justify-content-between">
                 <ul class="navbar-nav flex-grow-1">
+                    <li class="nav-item">
+                        <a class="nav-link text-light" asp-area="" asp-controller="Cinema" asp-action="Index">
+                            <i class="bi bi-film"></i> Cinemas
+                        </a>
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link text-light" asp-area="" asp-controller="Movie" asp-action="Index">
                             <i class="bi bi-camera-reels"></i> Movies

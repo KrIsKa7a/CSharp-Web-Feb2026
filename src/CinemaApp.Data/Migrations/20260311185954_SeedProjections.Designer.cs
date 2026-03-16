@@ -4,6 +4,7 @@ using CinemaApp.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CinemaApp.Data.Migrations
 {
     [DbContext(typeof(CinemaAppDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260311185954_SeedProjections")]
+    partial class SeedProjections
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -283,12 +286,6 @@ namespace CinemaApp.Data.Migrations
                     b.Property<decimal>("TicketPrice")
                         .HasColumnType("decimal(9, 2)");
 
-                    b.Property<byte[]>("Version")
-                        .IsConcurrencyToken()
-                        .IsRequired()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("rowversion");
-
                     b.HasKey("Id");
 
                     b.HasIndex("MovieId");
@@ -306,7 +303,7 @@ namespace CinemaApp.Data.Migrations
                             CinemaId = new Guid("86e9d655-4bec-4685-b42f-40f93efedda2"),
                             IsDeleted = false,
                             MovieId = new Guid("ae50a5ab-9642-466f-b528-3cc61071bb4c"),
-                            Showtime = new DateTime(2026, 3, 3, 16, 30, 0, 0, DateTimeKind.Unspecified),
+                            Showtime = new DateTime(2026, 3, 13, 14, 59, 53, 306, DateTimeKind.Local).AddTicks(3482),
                             TicketPrice = 10.00m
                         },
                         new
@@ -316,7 +313,7 @@ namespace CinemaApp.Data.Migrations
                             CinemaId = new Guid("86e9d655-4bec-4685-b42f-40f93efedda2"),
                             IsDeleted = false,
                             MovieId = new Guid("777634e2-3bb6-4748-8e91-7a10b70c78ac"),
-                            Showtime = new DateTime(2026, 3, 5, 13, 45, 0, 0, DateTimeKind.Unspecified),
+                            Showtime = new DateTime(2026, 3, 13, 14, 59, 53, 306, DateTimeKind.Local).AddTicks(3547),
                             TicketPrice = 10.00m
                         },
                         new
@@ -326,7 +323,7 @@ namespace CinemaApp.Data.Migrations
                             CinemaId = new Guid("ccb61fcf-9bd8-4008-88e8-dc69c9d24566"),
                             IsDeleted = false,
                             MovieId = new Guid("ae50a5ab-9642-466f-b528-3cc61071bb4c"),
-                            Showtime = new DateTime(2026, 3, 8, 19, 0, 0, 0, DateTimeKind.Unspecified),
+                            Showtime = new DateTime(2026, 3, 14, 16, 59, 53, 306, DateTimeKind.Local).AddTicks(3555),
                             TicketPrice = 12.50m
                         },
                         new
@@ -336,7 +333,7 @@ namespace CinemaApp.Data.Migrations
                             CinemaId = new Guid("e2e63228-9ddf-491c-888a-f8077c53430e"),
                             IsDeleted = false,
                             MovieId = new Guid("68fb84b9-ef2a-402f-b4fc-595006f5c275"),
-                            Showtime = new DateTime(2026, 3, 9, 11, 20, 0, 0, DateTimeKind.Unspecified),
+                            Showtime = new DateTime(2026, 3, 15, 15, 59, 53, 306, DateTimeKind.Local).AddTicks(3562),
                             TicketPrice = 15.00m
                         });
                 });
@@ -349,9 +346,6 @@ namespace CinemaApp.Data.Migrations
 
                     b.Property<Guid>("ProjectionId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
 
                     b.Property<string>("UserId")
                         .IsRequired()

@@ -10,5 +10,16 @@
             public const int DescriptionMaxLength = 1000;
             public const int ImageUrlMaxLength = 2048;
         }
+
+        public static class Cinema
+        {
+            public const int NameMaxLength = 80;
+            public const int LocationMaxLength = 50;
+        }
+
+        public static class Projection
+        {
+            public const string TicketPriceType = "decimal(9, 2)";
+        }
     }
 }
