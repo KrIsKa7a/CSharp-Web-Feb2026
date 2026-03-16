@@ -29,6 +29,9 @@
         [Column(TypeName = TicketPriceType)]
         public decimal TicketPrice { get; set; }
 
+        [Timestamp]
+        public byte[] Version { get; set; } = null!;
+
         public virtual ICollection<Ticket> Tickets { get; set; }
             = new List<Ticket>();
     }
