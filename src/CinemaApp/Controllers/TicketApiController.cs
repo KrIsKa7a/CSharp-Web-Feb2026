@@ -15,18 +15,15 @@
     public class TicketApiController : ControllerBase
     {
         private readonly ITicketService ticketService;
-        private readonly IProjectionService projectionService;
 
-        public TicketApiController(ITicketService ticketService, IProjectionService projectionService)
+        public TicketApiController(ITicketService ticketService)
         {
             this.ticketService = ticketService;
-            this.projectionService = projectionService;
         }
 
         [HttpPost("BuyTicket")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
         public async Task<ActionResult> BuyTicket([FromBody] BuyTicketInputModel inputModel)
         {
             try
@@ -42,6 +39,10 @@
                 return Ok();
             }
             catch (EntityInputDataFormatException)
+            {
+                return BadRequest();
+            }
+            catch (EntityPersistFailureException)
             {
                 return BadRequest();
             }

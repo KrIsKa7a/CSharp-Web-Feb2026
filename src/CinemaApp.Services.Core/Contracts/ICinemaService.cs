@@ -1,7 +1,6 @@
 ﻿namespace CinemaApp.Services.Core.Contracts
 {
     using Models.Cinema;
-    using Web.ViewModels.Cinema;
 
     public interface ICinemaService
     {

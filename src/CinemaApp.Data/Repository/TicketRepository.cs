@@ -1,6 +1,7 @@
 ﻿namespace CinemaApp.Data.Repository
 {
     using Contracts;
+    using GCommon.Exceptions;
     using Models;
 
     public class TicketRepository : BaseRepository, ITicketRepository
@@ -20,7 +21,7 @@
                 .FindAsync(projectionId);
             if (projection == null)
             {
-                throw new ArgumentException();
+                throw new EntityPersistFailureException();
             }
 
             projection.AvailableTickets -= ticket.Quantity;

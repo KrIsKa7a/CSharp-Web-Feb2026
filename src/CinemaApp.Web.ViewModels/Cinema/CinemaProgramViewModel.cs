@@ -9,6 +9,7 @@
 
         public string Name { get; set; } = null!;
 
-        public ICollection<CinemaProgramMoviesViewModel> ProjectionMovies { get; set; } = null!;
+        public ICollection<CinemaProgramMoviesViewModel> ProjectionMovies { get; set; } 
+            = new List<CinemaProgramMoviesViewModel>();
     }
 }
