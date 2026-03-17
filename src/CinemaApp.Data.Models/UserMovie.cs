@@ -1,17 +1,16 @@
 ﻿namespace CinemaApp.Data.Models
 {
     using System.ComponentModel.DataAnnotations.Schema;
-
-    using Microsoft.AspNetCore.Identity;
+    
     using Microsoft.EntityFrameworkCore;
 
     [PrimaryKey(nameof(UserId), nameof(MovieId))]
     public class UserMovie
     {
         [ForeignKey(nameof(User))]
-        public string UserId { get; set; } = null!;
+        public Guid UserId { get; set; }
 
-        public virtual IdentityUser User { get; set; } = null!;
+        public virtual ApplicationUser User { get; set; } = null!;
 
         [ForeignKey(nameof(Movie))]
         public Guid MovieId { get; set; }

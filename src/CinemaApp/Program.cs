@@ -1,11 +1,12 @@
 namespace CinemaApp.Web
 {
     using Data;
+    using Data.Models;
     using Data.Repository;
-    using Data.Repository.Contracts;
+    using Data.Seeding;
+    using Data.Seeding.Contracts;
     using Infrastructure.Extensions;
     using Services.Core;
-    using Services.Core.Contracts;
     using Services.Mapping;
     using Services.Models.Movie;
     using ViewModels.Movie;
@@ -32,13 +33,16 @@ namespace CinemaApp.Web
             builder.Services.RegisterRepositories(typeof(MovieRepository));
             builder.Services.RegisterUserServices(typeof(MovieService));
 
+            builder.Services.AddTransient<IIdentitySeeder, IdentitySeeder>();
+
             builder.Services.AddSingleton(AutoMapperConfig.MapperInstance);
 
             builder.Services
-                .AddDefaultIdentity<IdentityUser>(options =>
+                .AddDefaultIdentity<ApplicationUser>(options =>
                 {
                     ConfigureIdentity(builder.Configuration, options);
                 })
+                .AddRoles<IdentityRole<Guid>>()
                 .AddEntityFrameworkStores<CinemaAppDbContext>();
             builder.Services.AddControllersWithViews();
 
@@ -64,8 +68,14 @@ namespace CinemaApp.Web
             app.UseAuthentication();
             app.UseAuthorization();
 
+            app.UseRolesSeeder();
+            app.UseAdminUserSeeder();
+
             app.UseStatusCodePagesWithRedirects("/Home/Error/{0}");
 
+            app.MapControllerRoute(
+                name: "adminArea",
+                pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
