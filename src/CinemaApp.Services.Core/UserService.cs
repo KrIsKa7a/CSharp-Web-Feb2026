@@ -29,7 +29,7 @@
             foreach (UserManageAllDto userDto in userAllManageDtos)
             {
                 ApplicationUser appUser = appUsersNoCurrentUser
-                    .First(u => u.Id.ToString() == userDto.Id.ToString());
+                    .First(u => u.Id == userDto.Id);
                 userDto.Roles = await userRepository
                     .GetUserRolesAsync(appUser);
             }

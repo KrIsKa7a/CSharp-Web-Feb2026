@@ -79,6 +79,8 @@ namespace CinemaApp.Web.Areas.Identity.Pages.Account
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
 
+            [Required]
+            [DataType(DataType.Date)]
             [Display(Name = "Birthdate")]
             public DateTime Birthdate { get; set; }
         }

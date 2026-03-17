@@ -24,8 +24,6 @@
 
         public virtual DbSet<Ticket> Tickets { get; set; } = null!;
 
-        public virtual DbSet<ApplicationUser> ApplicationUsers { get; set; } = null!;
-
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

@@ -8,13 +8,13 @@
     using AutoMapper;
     using Data.Seeding;
 
-    public class UserManagement : BaseAdminController
+    public class UserManagementController : BaseAdminController
     {
         private readonly IUserService userService;
 
         private readonly IMapper mapper;
 
-        public UserManagement(IUserService userService, IMapper mapper)
+        public UserManagementController(IUserService userService, IMapper mapper)
         {
             this.userService = userService;
             this.mapper = mapper;

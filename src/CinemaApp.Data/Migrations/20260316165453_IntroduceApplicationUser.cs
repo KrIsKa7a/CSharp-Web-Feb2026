@@ -226,7 +226,7 @@ namespace CinemaApp.Data.Migrations
 
             migrationBuilder.AddForeignKey(
                 name: "FK_AspNetUserRoles_AspNetRoles_RoleId",
-                table: "AspnetUserRoles",
+                table: "AspNetUserRoles",
                 column: "RoleId",
                 principalTable: "AspNetRoles",
                 principalColumn: "Id",

@@ -41,7 +41,7 @@
                                     <select id="roleDropdown-@user.Id" class="form-select form-select-sm w-auto me-2">
                                         @foreach (string role in availableRoles)
                                         {
-                                            <option value="@role" selected="@(user.Roles.Contains(role) ? "selected" : null)">@role</option>
+                                            <option value="@role" selected="@(user.Roles.Contains(role) && user.Roles.Count() == 1 ? "selected" : null)">@role</option>
                                         }
                                     </select>
 
