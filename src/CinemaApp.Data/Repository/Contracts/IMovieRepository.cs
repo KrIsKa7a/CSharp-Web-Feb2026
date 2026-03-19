@@ -6,7 +6,7 @@
 
     public interface IMovieRepository
     {
-        Task<IEnumerable<Movie>> GetAllMoviesNoTrackingWithProjectionAsync(Expression<Func<Movie, Movie>>? projectionQuery = null);
+        Task<IEnumerable<Movie>> GetAllMoviesNoTrackingWithProjectionAsync(Expression<Func<Movie, Movie>>? projectionQuery = null, Expression<Func<Movie, bool>>? filterQuery = null, int? skipCnt = null, int? takeCnt = null);
 
         Task<IEnumerable<Movie>> GetAllMoviesAsync();
 
@@ -21,5 +21,7 @@
         Task<bool> HardDeleteMovieAsync(Movie movie);
 
         Task<bool> ExistsByIdAsync(Guid id);
+
+        Task<int> CountAsync(Expression<Func<Movie, bool>>? filterQuery);
     }
 }

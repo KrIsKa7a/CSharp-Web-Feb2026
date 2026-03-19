@@ -8,7 +8,7 @@
 
     using AutoMapper;
 
-    public class MovieDetailsViewModel : AllMoviesIndexViewModel, IMapFrom<MovieDetailsDto>, IHaveCustomMappings
+    public class MovieDetailsViewModel : MovieIndexViewModel, IMapFrom<MovieDetailsDto>, IHaveCustomMappings
 	{
 		public string Description { get; set; } = null!;
 

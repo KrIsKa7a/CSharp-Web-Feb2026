@@ -1,13 +1,12 @@
 ﻿namespace CinemaApp.Services.Core
 {
-    using System.Globalization;
+    using System.Linq.Expressions;
 
     using Contracts;
     using Data.Models;
     using Data.Repository.Contracts;
     using GCommon.Exceptions;
     using Models.Movie;
-    using Web.ViewModels.Movie;
     using static GCommon.ApplicationConstants;
 
     using AutoMapper;
@@ -27,20 +26,34 @@
             this.mapper = mapper;
         }
 
-        public async Task<IEnumerable<MovieAllDto>> GetAllMoviesOrderedByTitleAsync(string? userId = null)
+        public async Task<IEnumerable<MovieAllDto>> GetAllMoviesOrderedByTitleAsync(string? userId = null, string? searchQuery = null, int pageNumber = 1, int moviesPerPage = DefaultEntitiesPerPage)
         {
-			// TODO: Use DTOs for data transfers between Data-Service-Controller layers instead of coupling Service to ViewModels
-			// Fetch data
+            Expression<Func<Movie, bool>>? filterQuery = null;
+            if (!string.IsNullOrWhiteSpace(searchQuery))
+            {
+                searchQuery = searchQuery.Trim().ToLowerInvariant();
+                filterQuery = m => (m.Title.ToLower().Contains(searchQuery)) ||
+                                   (m.Genre.ToLower().Contains(searchQuery)) ||
+                                    (m.Director.ToLower().Contains(searchQuery));
+            }
+
+            int skipCnt = (pageNumber - 1) * moviesPerPage;
+
+            // Fetch data
 			IEnumerable<Movie> allMoviesDb = await movieRepository
-                .GetAllMoviesNoTrackingWithProjectionAsync(m => new Movie()
-                {
-                    Id = m.Id,
-                    Title = m.Title,
-                    Genre = m.Genre,
-                    ReleaseDate = m.ReleaseDate,
-                    Director = m.Director,
-                    ImageUrl = m.ImageUrl ?? DefaultImageUrl,
-                });
+                .GetAllMoviesNoTrackingWithProjectionAsync(
+                    projectionQuery: m => new Movie()
+                    {
+                        Id = m.Id,
+                        Title = m.Title,
+                        Genre = m.Genre,
+                        ReleaseDate = m.ReleaseDate,
+                        Director = m.Director,
+                        ImageUrl = m.ImageUrl ?? DefaultImageUrl,
+                    },
+                    filterQuery: filterQuery,
+                    skipCnt: skipCnt,
+                    takeCnt: moviesPerPage);
             IEnumerable<UserMovie> allUserMovies = (await watchlistRepository
                 .GetAllUserMoviesAsync(um => um.UserId.ToString() == userId))
                 .ToHashSet();
@@ -64,6 +77,23 @@
 
             // Return processed data
             return allMoviesDtos;
+        }
+
+        public async Task<int> GetMoviesCountAsync(string? searchQuery = null)
+        {
+            Expression<Func<Movie, bool>>? filterQuery = null;
+            if (!string.IsNullOrWhiteSpace(searchQuery))
+            {
+                searchQuery = searchQuery.Trim().ToLowerInvariant();
+                filterQuery = m => (m.Title.ToLower().Contains(searchQuery)) ||
+                                   (m.Genre.ToLower().Contains(searchQuery)) ||
+                                   (m.Director.ToLower().Contains(searchQuery));
+            }
+
+            int moviesCnt = await movieRepository
+                .CountAsync(filterQuery);
+
+            return moviesCnt;
         }
 
         public async Task CreateMovieAsync(MovieDetailsDto movieDetailsDto)

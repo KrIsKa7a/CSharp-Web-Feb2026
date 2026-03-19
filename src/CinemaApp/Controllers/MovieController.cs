@@ -28,15 +28,38 @@
 
         [AllowAnonymous]
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(MoviesAllIndexViewModel movieAllInputModel)
         {
             string? userId = GetUserId();
             IEnumerable<MovieAllDto> movieAllDtos = await movieService
-                .GetAllMoviesOrderedByTitleAsync(userId);
-            IEnumerable<AllMoviesIndexViewModel> allMoviesIndexVms = mapper
-                .Map<IEnumerable<AllMoviesIndexViewModel>>(movieAllDtos);
+                .GetAllMoviesOrderedByTitleAsync(userId, movieAllInputModel.SearchQuery, movieAllInputModel.PageNumber);
+            int moviesTotalCnt = await movieService
+                .GetMoviesCountAsync(movieAllInputModel.SearchQuery);
 
-            return View(allMoviesIndexVms);
+            IEnumerable<MovieIndexViewModel> allMoviesIndexVms = mapper
+                .Map<IEnumerable<MovieIndexViewModel>>(movieAllDtos);
+
+            MoviesAllIndexViewModel movieAllVm = new MoviesAllIndexViewModel()
+            {
+                SearchQuery = movieAllInputModel.SearchQuery,
+                PageNumber = movieAllInputModel.PageNumber,
+                TotalPages = (int)Math.Ceiling(moviesTotalCnt / (double)DefaultEntitiesPerPage),
+                ShowingPages = movieAllInputModel.ShowingPages,
+                StartPageIndex = (movieAllInputModel.PageNumber / 10) * 10,
+                Movies = allMoviesIndexVms.ToArray(),
+            };
+
+            if (movieAllVm.PageNumber > movieAllVm.TotalPages && movieAllVm.TotalPages != 0)
+            {
+                return RedirectToAction(nameof(Index), new MoviesAllIndexViewModel()
+                {
+                    SearchQuery = movieAllInputModel.SearchQuery,
+                    PageNumber = movieAllVm.TotalPages,
+                    ShowingPages = movieAllInputModel.ShowingPages,
+                });
+            }
+
+            return View(movieAllVm);
         }
 
         [HttpGet]

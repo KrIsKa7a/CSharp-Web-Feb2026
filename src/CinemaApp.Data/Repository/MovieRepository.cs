@@ -6,6 +6,7 @@
     using Models;
 
     using Microsoft.EntityFrameworkCore;
+    using System.Linq;
 
     public class MovieRepository : BaseRepository, IMovieRepository
     {
@@ -15,16 +16,40 @@
 
         }
 
-        public async Task<IEnumerable<Movie>> GetAllMoviesNoTrackingWithProjectionAsync(Expression<Func<Movie, Movie>>? projectionQuery = null)
+        public async Task<IEnumerable<Movie>> GetAllMoviesNoTrackingWithProjectionAsync(Expression<Func<Movie, Movie>>? projectionQuery = null, 
+            Expression<Func<Movie, bool>>? filterQuery = null, int? skipCnt = null, int? takeCnt = null)
         {
             IQueryable<Movie> moviesFetchQuery = DbContext!
                 .Movies
                 .AsNoTracking()
-                .OrderBy(m => m.Title);
+                .OrderBy(m => m.Title)
+                .ThenBy(m => m.Id);
+
+            if (filterQuery != null)
+            {
+                moviesFetchQuery = moviesFetchQuery
+                    .Where(filterQuery)
+                    .AsQueryable();
+            }
+
             if (projectionQuery != null)
             {
                 moviesFetchQuery = moviesFetchQuery
                     .Select(projectionQuery)
+                    .AsQueryable();
+            }
+
+            if (skipCnt.HasValue && skipCnt > 0)
+            {
+                moviesFetchQuery = moviesFetchQuery
+                    .Skip(skipCnt.Value)
+                    .AsQueryable();
+            }
+
+            if (takeCnt.HasValue && takeCnt > 0)
+            {
+                moviesFetchQuery = moviesFetchQuery
+                    .Take(takeCnt.Value)
                     .AsQueryable();
             }
 
@@ -86,6 +111,23 @@
             return await DbContext!
                 .Movies
                 .AnyAsync(m => m.Id == id);
+        }
+
+        public async Task<int> CountAsync(Expression<Func<Movie, bool>>? filterQuery)
+        {
+            IQueryable<Movie> moviesFetchQuery = DbContext!
+                .Movies
+                .AsNoTracking();
+            if (filterQuery != null)
+            {
+                moviesFetchQuery = moviesFetchQuery
+                    .Where(filterQuery)
+                    .AsQueryable();
+            }
+
+            int moviesCnt = await moviesFetchQuery.CountAsync();
+
+            return moviesCnt;
         }
     }
 }

@@ -27,7 +27,7 @@ namespace CinemaApp.Web
             string connectionString = builder.Configuration
                 .GetConnectionString("SqlServer") ?? throw new InvalidOperationException("Connection string 'SqlServer' not found.");
 
-            AutoMapperConfig.RegisterMappings(typeof(MovieAllDto).Assembly, typeof(AllMoviesIndexViewModel).Assembly);
+            AutoMapperConfig.RegisterMappings(typeof(MovieAllDto).Assembly, typeof(MovieIndexViewModel).Assembly);
 
             builder.Services.AddDbContext<CinemaAppDbContext>(options =>
                 options.UseSqlServer(connectionString));

@@ -8,7 +8,7 @@
 
     using AutoMapper;
 
-    public class AllMoviesIndexViewModel : IMapFrom<MovieAllDto>, IHaveCustomMappings
+    public class MovieIndexViewModel : IMapFrom<MovieAllDto>, IHaveCustomMappings
     {
         public Guid Id { get; set; }
 
@@ -26,7 +26,7 @@
 
         public void CreateMappings(IProfileExpression configuration)
         {
-            configuration.CreateMap<MovieAllDto, AllMoviesIndexViewModel>()
+            configuration.CreateMap<MovieAllDto, MovieIndexViewModel>()
                 .ForMember(d => d.ReleaseDate,
                     y => y.MapFrom(s => s.ReleaseDate.ToString(DefaultDateFormat, CultureInfo.InvariantCulture)))
                 .ForMember(d => d.ImageUrl, opt => opt.MapFrom(s => s.ImageUrl ?? DefaultImageUrl));

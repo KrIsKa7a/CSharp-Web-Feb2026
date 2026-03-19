@@ -1,11 +1,13 @@
 ﻿namespace CinemaApp.Services.Core.Contracts
 {
     using Models.Movie;
-    using Web.ViewModels.Movie;
+    using static GCommon.ApplicationConstants;
 
     public interface IMovieService
     {
-        Task<IEnumerable<MovieAllDto>> GetAllMoviesOrderedByTitleAsync(string? userId = null);
+        Task<IEnumerable<MovieAllDto>> GetAllMoviesOrderedByTitleAsync(string? userId = null, string? searchQuery = null, int pageNumber = 1, int moviesPerPage = DefaultEntitiesPerPage);
+
+        Task<int> GetMoviesCountAsync(string? searchQuery = null);
 
         // TODO: Service to be refactored to work without coupling to ViewModels
         Task CreateMovieAsync(MovieDetailsDto movieDetailsDto);
