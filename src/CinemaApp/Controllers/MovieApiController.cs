@@ -3,14 +3,17 @@
     using Services.Core.Contracts;
     using Services.Models.Projection;
     using ViewModels.Movie.ApiModels;
+    using static GCommon.ApplicationConstants;
 
     using AutoMapper;
     using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Cors;
     using Microsoft.AspNetCore.Mvc;
 
     [Route("api/[controller]")]
     [Authorize]
     [ApiController]
+    [EnableCors(SoftuniDomainPolicyName)]
     public class MovieApiController : ControllerBase
     {
         private readonly IProjectionService projectionService;

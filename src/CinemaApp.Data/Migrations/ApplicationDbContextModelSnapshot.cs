@@ -112,7 +112,7 @@ namespace CinemaApp.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Cinemas");
+                    b.ToTable("Cinemas", (string)null);
 
                     b.HasData(
                         new
@@ -179,7 +179,7 @@ namespace CinemaApp.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Movies");
+                    b.ToTable("Movies", (string)null);
 
                     b.HasData(
                         new
@@ -365,7 +365,7 @@ namespace CinemaApp.Data.Migrations
                     b.HasIndex(new[] { "CinemaId", "MovieId", "Showtime" }, "IX_CinemaMovie_Mapping_Unique")
                         .IsUnique();
 
-                    b.ToTable("Projections");
+                    b.ToTable("Projections", (string)null);
 
                     b.HasData(
                         new
@@ -431,7 +431,7 @@ namespace CinemaApp.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Tickets");
+                    b.ToTable("Tickets", (string)null);
                 });
 
             modelBuilder.Entity("CinemaApp.Data.Models.UserMovie", b =>
@@ -449,7 +449,7 @@ namespace CinemaApp.Data.Migrations
 
                     b.HasIndex("MovieId");
 
-                    b.ToTable("UsersMovies");
+                    b.ToTable("UsersMovies", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", b =>

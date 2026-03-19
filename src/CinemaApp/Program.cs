@@ -12,6 +12,7 @@ namespace CinemaApp.Web
     using Services.Mapping;
     using Services.Models.Movie;
     using ViewModels.Movie;
+    using static GCommon.ApplicationConstants;
 
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
@@ -47,6 +48,18 @@ namespace CinemaApp.Web
                 })
                 .AddRoles<IdentityRole<Guid>>()
                 .AddEntityFrameworkStores<CinemaAppDbContext>();
+
+            builder.Services.AddCors(config =>
+            {
+                config.AddPolicy(SoftuniDomainPolicyName, policyBuilder =>
+                {
+                    policyBuilder
+                        .WithOrigins("https://softuni.bg")
+                        .WithMethods("GET", "POST")
+                        .AllowAnyHeader();
+                });
+            });
+
             builder.Services.AddControllersWithViews();
 
             WebApplication app = builder.Build();
@@ -67,6 +80,8 @@ namespace CinemaApp.Web
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            app.UseCors(SoftuniDomainPolicyName);
 
             app.UseAuthentication();
             app.UseAuthorization();

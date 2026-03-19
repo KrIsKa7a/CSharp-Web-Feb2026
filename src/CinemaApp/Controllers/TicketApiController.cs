@@ -5,13 +5,16 @@
     using GCommon.Exceptions;
     using Services.Core.Contracts;
     using ViewModels.Ticket;
+    using static GCommon.ApplicationConstants;
 
     using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Cors;
     using Microsoft.AspNetCore.Mvc;
 
     [Route("api/[controller]")]
     [Authorize]
     [ApiController]
+    [EnableCors(SoftuniDomainPolicyName)]
     public class TicketApiController : ControllerBase
     {
         private readonly ITicketService ticketService;

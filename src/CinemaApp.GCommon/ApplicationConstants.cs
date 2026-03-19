@@ -11,5 +11,7 @@
         public const string WarningTempDataKey = "WarningMessage";
         public const string InfoTempDataKey = "InfoMessage";
         public const string SuccessTempDataKey = "SuccessMessage";
+
+        public const string SoftuniDomainPolicyName = "AllowSoftuniDomain";
     }
 }
