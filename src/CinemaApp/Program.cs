@@ -6,6 +6,8 @@ namespace CinemaApp.Web
     using Data.Seeding;
     using Data.Seeding.Contracts;
     using Infrastructure.Extensions;
+    using Infrastructure.Utilities;
+    using Infrastructure.Utilities.Contracts;
     using Services.Core;
     using Services.Mapping;
     using Services.Models.Movie;
@@ -34,6 +36,7 @@ namespace CinemaApp.Web
             builder.Services.RegisterUserServices(typeof(MovieService));
 
             builder.Services.AddTransient<IIdentitySeeder, IdentitySeeder>();
+            builder.Services.AddSingleton<ISlugGenerator, SlugGenerator>();
 
             builder.Services.AddSingleton(AutoMapperConfig.MapperInstance);
 
@@ -76,6 +79,9 @@ namespace CinemaApp.Web
             app.MapControllerRoute(
                 name: "adminArea",
                 pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+            app.MapControllerRoute(
+                name: "slugRoute",
+                pattern: "{controller=Home}/{action=Index}/{id:required}/{slug:required}");
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
