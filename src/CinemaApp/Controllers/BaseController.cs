@@ -6,6 +6,7 @@
     using Microsoft.AspNetCore.Mvc;
 
     [Authorize]
+    [AutoValidateAntiforgeryToken]
     public class BaseController : Controller
     {
         public string? GetUserId()

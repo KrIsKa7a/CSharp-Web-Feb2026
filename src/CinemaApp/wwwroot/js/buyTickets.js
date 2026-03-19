@@ -1,5 +1,8 @@
 ﻿$(document).ready(function () {
-    $(".buy-ticket-btn").on("click", function () {
+    $(".buy-ticket-btn").on("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
         const cinemaId = $(this).attr("data-cinema-id");
         const cinemaName = $(this).attr("data-cinema-name");
         const movieId = $(this).attr("data-movie-id");
@@ -54,12 +57,17 @@
         $("#buyTicketModal").modal("show");
     });
 
-    $("#buyTicketButton").on("click", function () {
+    $("#buyTicketButton").on("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const requestVerifToken = $("input[name='__RequestVerificationToken']").first().val();
         const requestData = {
             cinemaId: $("#cinemaId").val().trim(),
             movieId: $("#movieId").val().trim(),
             quantity: parseInt($("#quantity").val(), 10),
-            projectionId: $("#showtime").find(":selected").val()
+            projectionId: $("#showtime").find(":selected").val(),
+            __RequestVerificationToken: requestVerifToken,
         };
 
         if (!requestData.quantity || requestData.quantity < 1) {
@@ -72,6 +80,9 @@
             method: "POST",
             contentType: "application/json",
             data: JSON.stringify(requestData),
+            headers: {
+                RequestVerificationToken: requestVerifToken
+            },
             success: function (response) {
                 Swal.fire("Success!", "Your ticket has been purchased successfully!", "success");
                 $("#buyTicketModal").modal("hide");

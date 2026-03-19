@@ -22,6 +22,7 @@
         }
 
         [HttpPost("BuyTicket")]
+        [ValidateAntiForgeryToken]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         public async Task<ActionResult> BuyTicket([FromBody] BuyTicketInputModel inputModel)
