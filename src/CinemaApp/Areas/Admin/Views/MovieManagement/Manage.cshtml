@@ -51,7 +51,7 @@
                             <td>@movie.Genre</td>
                             <td>@movie.Duration min</td>
                             <td>@movie.Director</td>
-                            <td>@DateTime.Parse(movie.ReleaseDate).ToString("yyyy-MM-dd")</td>
+                            <td>@movie.ReleaseDate</td>
                             <td>
                                 <div class="d-flex justify-content-center gap-2">
                                     <a asp-area="Admin" asp-controller="MovieManagement" asp-action="Edit" asp-route-id="@movie.Id" class="btn btn-primary btn-sm fw-bold">

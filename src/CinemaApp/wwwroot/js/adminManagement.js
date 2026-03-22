@@ -15,9 +15,7 @@
             }
         });
     };
-});
 
-document.addEventListener("DOMContentLoaded", function () {
     window.confirmToggleDeleteMovie = function (movieId, action) {
         Swal.fire({
             title: "Are you sure?",
@@ -35,4 +33,3 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     };
 });
-

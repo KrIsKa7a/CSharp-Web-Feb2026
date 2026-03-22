@@ -9,7 +9,6 @@
 
     using AutoMapper;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
 
     public class MovieManagementController : BaseAdminController
     {

@@ -47,11 +47,6 @@
             IEnumerable<Ticket> allUserTickets = await ticketRepository
                 .GetAllTicketsAsync(
                     filterQuery: t => t.UserId.ToString() == userId,
-                    projectionQuery: ticket => new Ticket()
-                    {
-                        Projection = ticket.Projection,
-                        Quantity = ticket.Quantity,
-                    },
                     includeMovies: true,
                     includeCinemas: true);
 

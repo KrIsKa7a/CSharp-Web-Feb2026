@@ -10,7 +10,6 @@
 
     using AutoMapper;
     using Microsoft.AspNetCore.Mvc;
-    using System.Data;
 
     public class UserManagementController : BaseAdminController
     {
