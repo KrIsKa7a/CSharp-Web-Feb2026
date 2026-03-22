@@ -26,7 +26,9 @@
             this.mapper = mapper;
         }
 
-        public async Task<IEnumerable<MovieAllDto>> GetAllMoviesOrderedByTitleAsync(string? userId = null, string? searchQuery = null, int pageNumber = 1, int moviesPerPage = DefaultEntitiesPerPage)
+        public async Task<IEnumerable<MovieAllDto>> GetAllMoviesOrderedByTitleAsync(string? userId = null, 
+            string? searchQuery = null, int pageNumber = 1, int? moviesPerPage = DefaultEntitiesPerPage,
+            bool includeDeleted = false)
         {
             Expression<Func<Movie, bool>>? filterQuery = null;
             if (!string.IsNullOrWhiteSpace(searchQuery))
@@ -37,7 +39,7 @@
                                     (m.Director.ToLower().Contains(searchQuery));
             }
 
-            int skipCnt = (pageNumber - 1) * moviesPerPage;
+            int? skipCnt = (pageNumber - 1) * moviesPerPage;
 
             // Fetch data
 			IEnumerable<Movie> allMoviesDb = await movieRepository
@@ -50,10 +52,13 @@
                         ReleaseDate = m.ReleaseDate,
                         Director = m.Director,
                         ImageUrl = m.ImageUrl ?? DefaultImageUrl,
+                        Duration = m.Duration,
+                        IsDeleted = m.IsDeleted,
                     },
                     filterQuery: filterQuery,
                     skipCnt: skipCnt,
-                    takeCnt: moviesPerPage);
+                    takeCnt: moviesPerPage,
+                    ignoreQueryFilters: includeDeleted);
             IEnumerable<UserMovie> allUserMovies = (await watchlistRepository
                 .GetAllUserMoviesAsync(um => um.UserId.ToString() == userId))
                 .ToHashSet();
@@ -121,10 +126,10 @@
             return mapper.Map<MovieDetailsDto>(movieDb);
         }
 
-        public async Task<MovieDetailsDto?> GetMovieFormModelByIdAsync(Guid id)
+        public async Task<MovieDetailsDto?> GetMovieFormModelByIdAsync(Guid id, bool includeDeleted = false)
         {
             Movie? movieDb = await movieRepository
-                .GetMovieByIdAsync(id);
+                .GetMovieByIdAsync(id, includeDeleted);
 
             if (movieDb == null)
             {
@@ -140,10 +145,10 @@
             return await movieRepository.ExistsByIdAsync(id);
         }
 
-        public async Task EditMovieAsync(Guid id, MovieDetailsDto movieDetailsDto)
+        public async Task EditMovieAsync(Guid id, MovieDetailsDto movieDetailsDto, bool includeDeleted = false)
         {
             Movie? movieDb = await movieRepository
-                .GetMovieByIdAsync(id);
+                .GetMovieByIdAsync(id, includeDeleted);
             if (movieDb == null)
             {
                 throw new EntityNotFoundException();
@@ -156,6 +161,7 @@
             movieDb.Duration = movieDetailsDto.Duration;
             movieDb.Director = movieDetailsDto.Director;
             movieDb.ImageUrl = movieDetailsDto.ImageUrl;
+            movieDb.IsDeleted = movieDetailsDto.IsDeleted;
             
             bool editSuccess = await movieRepository.EditMovieAsync(movieDb);
             if (!editSuccess)

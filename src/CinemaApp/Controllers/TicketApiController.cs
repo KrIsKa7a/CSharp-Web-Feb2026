@@ -4,7 +4,7 @@
 
     using GCommon.Exceptions;
     using Services.Core.Contracts;
-    using ViewModels.Ticket;
+    using ViewModels.Ticket.ApiModels;
     using static GCommon.ApplicationConstants;
 
     using Microsoft.AspNetCore.Authorization;

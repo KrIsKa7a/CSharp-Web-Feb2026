@@ -1,12 +1,12 @@
 ﻿namespace CinemaApp.Data.Repository
 {
+    using System.Linq;
     using System.Linq.Expressions;
 
     using Contracts;
     using Models;
 
     using Microsoft.EntityFrameworkCore;
-    using System.Linq;
 
     public class MovieRepository : BaseRepository, IMovieRepository
     {
@@ -17,13 +17,19 @@
         }
 
         public async Task<IEnumerable<Movie>> GetAllMoviesNoTrackingWithProjectionAsync(Expression<Func<Movie, Movie>>? projectionQuery = null, 
-            Expression<Func<Movie, bool>>? filterQuery = null, int? skipCnt = null, int? takeCnt = null)
+            Expression<Func<Movie, bool>>? filterQuery = null, int? skipCnt = null, int? takeCnt = null, bool ignoreQueryFilters = false)
         {
             IQueryable<Movie> moviesFetchQuery = DbContext!
                 .Movies
                 .AsNoTracking()
                 .OrderBy(m => m.Title)
                 .ThenBy(m => m.Id);
+
+            if (ignoreQueryFilters)
+            {
+                moviesFetchQuery = moviesFetchQuery
+                    .IgnoreQueryFilters();
+            }
 
             if (filterQuery != null)
             {
@@ -65,11 +71,21 @@
                 .ToArrayAsync();
         }
 
-        public async Task<Movie?> GetMovieByIdAsync(Guid id)
+        public async Task<Movie?> GetMovieByIdAsync(Guid id, bool ignoreQueryFilters = false)
         {
-	        return await DbContext!
+            IQueryable<Movie> getMovieQuery = DbContext!
                 .Movies
-		        .FindAsync(id);
+                .AsQueryable();
+            if (ignoreQueryFilters)
+            {
+                getMovieQuery = getMovieQuery
+                    .IgnoreQueryFilters();
+            }
+
+            Movie? movie = await getMovieQuery
+                .SingleOrDefaultAsync(m => m.Id == id);
+
+            return movie;
         }
 
         public async Task<bool> AddMovieAsync(Movie movie)

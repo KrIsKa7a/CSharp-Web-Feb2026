@@ -6,11 +6,11 @@
 
     public interface IMovieRepository
     {
-        Task<IEnumerable<Movie>> GetAllMoviesNoTrackingWithProjectionAsync(Expression<Func<Movie, Movie>>? projectionQuery = null, Expression<Func<Movie, bool>>? filterQuery = null, int? skipCnt = null, int? takeCnt = null);
+        Task<IEnumerable<Movie>> GetAllMoviesNoTrackingWithProjectionAsync(Expression<Func<Movie, Movie>>? projectionQuery = null, Expression<Func<Movie, bool>>? filterQuery = null, int? skipCnt = null, int? takeCnt = null, bool ignoreQueryFilters = false);
 
         Task<IEnumerable<Movie>> GetAllMoviesAsync();
 
-        Task<Movie?> GetMovieByIdAsync(Guid id);
+        Task<Movie?> GetMovieByIdAsync(Guid id, bool ignoreQueryFilters = false);
 
 		Task<bool> AddMovieAsync(Movie movie);
 

@@ -1,4 +1,4 @@
-﻿namespace CinemaApp.Web.ViewModels.Movie
+﻿namespace CinemaApp.Web.ViewModels.Admin.Movie
 {
     using System.ComponentModel.DataAnnotations;
 
@@ -41,7 +41,6 @@
         [Url]
         [MaxLength(ImageUrlMaxLength, ErrorMessage = ImageUrlMaxLengthMessage)]
         public string? ImageUrl { get; set; }
-
 
         public void CreateMappings(IProfileExpression configuration)
         {

@@ -13,8 +13,7 @@
         public static string[] ApplicationRoles = new[]
         {
             "Admin",
-            "Moderator",
-            "User"
+            "Moderator"
         };
 
         private readonly RoleManager<IdentityRole<Guid>> roleManager;

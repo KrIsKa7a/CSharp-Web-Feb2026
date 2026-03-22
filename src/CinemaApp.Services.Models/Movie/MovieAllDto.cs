@@ -19,6 +19,10 @@
 
         public string? ImageUrl { get; set; }
 
+        public int Duration { get; set; }
+
+        public bool IsDeleted { get; set; }
+
         public bool IsInUserWatchlist { get; set; }
 
         public void CreateMappings(IProfileExpression configuration)
