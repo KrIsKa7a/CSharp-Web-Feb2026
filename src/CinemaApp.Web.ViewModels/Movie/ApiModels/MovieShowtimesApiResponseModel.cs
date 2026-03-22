@@ -2,6 +2,7 @@
 {
     using Services.Mapping;
     using Services.Models.Projection;
+    using static GCommon.ApplicationConstants;
 
     using AutoMapper;
 
@@ -15,7 +16,7 @@
         {
             configuration
                 .CreateMap<ProjectionShowtimeDto, MovieShowtimesApiResponseModel>()
-                .ForMember(d => d.Showtime, opt => opt.MapFrom(s => s.Showtime.ToString("g")));
+                .ForMember(d => d.Showtime, opt => opt.MapFrom(s => s.Showtime.ToString(DefaultShowtimeFormat)));
         }
     }
 }

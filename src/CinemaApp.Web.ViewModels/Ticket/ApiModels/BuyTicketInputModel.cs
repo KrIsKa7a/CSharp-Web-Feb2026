@@ -1,4 +1,4 @@
-﻿namespace CinemaApp.Web.ViewModels.Ticket
+﻿namespace CinemaApp.Web.ViewModels.Ticket.ApiModels
 {
     public class BuyTicketInputModel
     {
