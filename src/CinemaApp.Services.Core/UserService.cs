@@ -6,6 +6,7 @@
     using Models.ApplicationUser;
 
     using AutoMapper;
+    using GCommon.Exceptions;
 
     public class UserService : IUserService
     {
@@ -35,6 +36,45 @@
             }
 
             return userAllManageDtos;
+        }
+
+        public async Task<bool> AssignRoleToUserAsync(Guid userId, string role)
+        {
+            if (userId == Guid.Empty || string.IsNullOrWhiteSpace(role))
+            {
+                throw new EntityInputDataFormatException();
+            }
+
+            bool result = await userRepository
+                .UpdateUserRoleAsync(userId, role);
+
+            return result;
+        }
+
+        public async Task<bool> RemoveRoleFromUserAsync(Guid userId, string role)
+        {
+            if (userId == Guid.Empty || string.IsNullOrWhiteSpace(role))
+            {
+                throw new EntityInputDataFormatException();
+            }
+
+            bool result = await userRepository
+                .UpdateUserRoleAsync(userId, role, removingRole: true);
+
+            return result;
+        }
+
+        public async Task<bool> DeleteUserAsync(Guid userId)
+        {
+            if (userId == Guid.Empty)
+            {
+                throw new EntityInputDataFormatException();
+            }
+
+            bool result = await userRepository
+                .DeleteUserAsync(userId);
+
+            return result;
         }
     }
 }

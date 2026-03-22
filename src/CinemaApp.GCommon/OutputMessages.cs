@@ -41,6 +41,11 @@
         public static class ApplicationUser
         {
             public const string UserAgeBelowMinimumMessage = "Users must be at least {0} years old!";
+            public const string UserRoleAssignmentIdentityErrorMessage = "There was an error assigning role {0} to the user! Ensure that user and role exists and user is not assigned to the role!";
+            public const string UserRoleAssignmentFailureMessage = "There was an error {1} role {0} to the user! Please review log information!";
+            public const string UserRoleRemoveIdentityErrorMessage = "There was an error removing role {0} from the user! Ensure that user and role exists and user is assigned to the role!";
+            public const string UserDeleteNotExistMessage = "There was an error deleting the user! Ensure that the user exists!";
+            public const string UserDeleteFailureErrorMessage = "There was an error deleting the user! Please review log information!";
         }
     }
 }
