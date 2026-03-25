@@ -11,7 +11,7 @@
     using AutoMapper;
     using Microsoft.AspNetCore.Mvc;
 
-    public class UserManagementController : BaseAdminController
+    public class UserManagementController : BaseManagerController
     {
         private readonly IUserService userService;
 
