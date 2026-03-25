@@ -27,11 +27,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CinemaApp.Services.Core", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CinemaApp.Services.Common", "CinemaApp.Services.Common\CinemaApp.Services.Common.csproj", "{33A9B275-B0C9-4533-BC31-952C34DFD621}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CinemaApp.Services.Models", "CinemaApp.Services.Models\CinemaApp.Services.Models.csproj", "{31289527-CFF8-4A9A-AE5C-8E87D8D8D5A1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CinemaApp.Services.Models", "CinemaApp.Services.Models\CinemaApp.Services.Models.csproj", "{31289527-CFF8-4A9A-AE5C-8E87D8D8D5A1}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CinemaApp.Services.AutoMapping", "CinemaApp.Services.AutoMapping\CinemaApp.Services.AutoMapping.csproj", "{61C9D74A-4456-4C7B-96EA-32F956D0AF31}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CinemaApp.Web.Infrastructure", "CinemaApp.Web.Infrastructure\CinemaApp.Web.Infrastructure.csproj", "{47A7504A-BFEC-4690-8749-A71EFB673FA4}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CinemaApp.Services.Tests", "CinemaApp.Services.Tests\CinemaApp.Services.Tests.csproj", "{85C358D1-11C0-4020-8878-4362A593A503}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CinemaApp.IntegrationTests", "CinemaApp.IntegrationTests\CinemaApp.IntegrationTests.csproj", "{47732928-6183-4630-AECC-EDB74DC2434D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -83,6 +87,14 @@ Global
 		{47A7504A-BFEC-4690-8749-A71EFB673FA4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{47A7504A-BFEC-4690-8749-A71EFB673FA4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{47A7504A-BFEC-4690-8749-A71EFB673FA4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{85C358D1-11C0-4020-8878-4362A593A503}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{85C358D1-11C0-4020-8878-4362A593A503}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{85C358D1-11C0-4020-8878-4362A593A503}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{85C358D1-11C0-4020-8878-4362A593A503}.Release|Any CPU.Build.0 = Release|Any CPU
+		{47732928-6183-4630-AECC-EDB74DC2434D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{47732928-6183-4630-AECC-EDB74DC2434D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{47732928-6183-4630-AECC-EDB74DC2434D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{47732928-6183-4630-AECC-EDB74DC2434D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -98,6 +110,8 @@ Global
 		{31289527-CFF8-4A9A-AE5C-8E87D8D8D5A1} = {C8347219-1C67-45B6-BD1E-00FD5DDFF94C}
 		{61C9D74A-4456-4C7B-96EA-32F956D0AF31} = {C8347219-1C67-45B6-BD1E-00FD5DDFF94C}
 		{47A7504A-BFEC-4690-8749-A71EFB673FA4} = {E9F39ADB-1A77-4205-8E24-7396BC55CF78}
+		{85C358D1-11C0-4020-8878-4362A593A503} = {744666C0-E69F-4DA8-8445-BAA0139E624F}
+		{47732928-6183-4630-AECC-EDB74DC2434D} = {744666C0-E69F-4DA8-8445-BAA0139E624F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E01D5365-332F-4A49-8820-58BFB761EB89}
