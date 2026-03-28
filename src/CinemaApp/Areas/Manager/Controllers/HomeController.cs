@@ -20,7 +20,7 @@
             bool isManager = await IsUserManagerAsync(userId);
             if (!isManager)
             {
-                return Unauthorized();
+                return Forbid();
             }
 
             return View();

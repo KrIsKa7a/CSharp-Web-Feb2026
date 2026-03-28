@@ -23,7 +23,7 @@
         [ForeignKey(nameof(Manager))]
         public Guid? ManagerId { get; set; }
 
-        public virtual Manager Manager { get; set; } = null!;
+        public virtual Manager? Manager { get; set; }
 
         public virtual ICollection<Projection> Projections { get; set; }
             = new HashSet<Projection>();

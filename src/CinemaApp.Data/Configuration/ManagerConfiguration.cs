@@ -12,7 +12,7 @@
             entity
                 .HasOne(m => m.User)
                 .WithOne()
-                .HasForeignKey(typeof(Manager), "UserId")
+                .HasForeignKey<Manager>(m => m.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
         }
     }

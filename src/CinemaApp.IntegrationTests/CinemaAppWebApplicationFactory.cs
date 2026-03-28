@@ -29,6 +29,8 @@
                     opt.UseInMemoryDatabase(inMemoryDatabaseName, b => b.EnableNullChecks(false));
                 });
 
+                builder.UseEnvironment("Testing");
+
                 IServiceProvider serviceProvider = services.BuildServiceProvider();
 
                 using IServiceScope scope = serviceProvider.CreateScope();

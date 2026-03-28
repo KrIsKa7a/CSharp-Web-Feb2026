@@ -10,7 +10,7 @@
     using AutoMapper;
     using Microsoft.AspNetCore.Mvc;
 
-    public class MovieManagementController : BaseManagerController
+    public class MovieManagementController : BaseAdminController
     {
         private readonly IMovieService movieService;
         private readonly IMapper mapper;
