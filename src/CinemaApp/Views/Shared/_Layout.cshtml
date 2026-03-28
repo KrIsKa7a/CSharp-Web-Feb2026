@@ -1,6 +1,11 @@
-﻿@{
+﻿@using CinemaApp.Services.Core.Contracts
+@using System.Security.Claims
+@inject IManagerService ManagerService
+
+@{
 	int currentYear = DateTime.UtcNow.Year;
 	string footerNote = (2025 == currentYear) ? $"{currentYear}" : $"{2025} - {currentYear}";
+    string? userId = User?.FindFirstValue(ClaimTypes.NameIdentifier);
 }
 
 <!DOCTYPE html>
@@ -66,6 +71,16 @@
                                     </a>
                                 </li>
                             </ul>
+                        </li>
+                    }
+
+                    @if (User?.Identity?.IsAuthenticated == true &&
+                        await ManagerService.IsUserManagerAsync(userId!))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link text-light" asp-area="Manager" asp-controller="Home" asp-action="Index">
+                                <i class="bi bi-table"></i> Manage
+                            </a>
                         </li>
                     }
 
