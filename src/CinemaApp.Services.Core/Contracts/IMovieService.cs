@@ -9,8 +9,14 @@
 
         Task<MovieServiceStatusResponseModel> CreateMovieAsync(CreateMovieRequestData requestData);
 
+        Task<MovieBasicDataResponseModel?> GetMovieBasicDataByIdAsync(Guid id);
+
         Task<MovieExtendedDataResponseModel?> GetMovieExtendedDataByIdAsync(Guid id);
 
         Task<MovieServiceStatusResponseModel> EditMovieAsync(EditMovieRequestData requestData);
+
+        Task<MovieServiceStatusResponseModel> SoftDeleteMovieAsync(Guid id);
+
+        Task<MovieServiceStatusResponseModel> HardDeleteMovieAsync(Guid id);
     }
 }

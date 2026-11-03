@@ -201,5 +201,54 @@
 
             return RedirectToAction(nameof(Details), new { id = id.Value.ToString() });
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Delete([FromRoute] Guid? id)
+        {
+            if (id == null)
+            {
+                return BadRequest();
+            }
+
+            MovieBasicDataResponseModel? movieBasicData = await movieService
+                .GetMovieBasicDataByIdAsync(id.Value);
+            if (movieBasicData == null)
+            {
+                return NotFound();
+            }
+
+            MovieDeleteViewModel movieDeleteViewModel = new MovieDeleteViewModel()
+            {
+                Id = movieBasicData.Id.ToString(),
+                Title = movieBasicData.Title,
+                ImageUrl = movieBasicData.ImageUrl ?? DefaultImageUrl
+            };
+
+            return View(movieDeleteViewModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete([FromRoute] Guid? id, [FromForm] MovieDeleteViewModel inputModel)
+        {
+            if (id == null)
+            {
+                return BadRequest();
+            }
+
+            MovieServiceStatusResponseModel deleteStatus = await movieService
+                .SoftDeleteMovieAsync(id.Value);
+            if (deleteStatus.Status == MovieServiceResponseStatus.NotFound)
+            {
+                return NotFound();
+            }
+
+            if (deleteStatus.Status == MovieServiceResponseStatus.GeneralError)
+            {
+                ModelState.AddModelError(string.Empty, GeneralErrorMessage);
+                return View(inputModel);
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
     }
 }

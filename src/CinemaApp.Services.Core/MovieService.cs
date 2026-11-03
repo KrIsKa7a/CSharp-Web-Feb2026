@@ -1,19 +1,15 @@
 ﻿namespace CinemaApp.Services.Core
 {
-    using Azure;
+    using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.Logging;
 
     using CinemaApp.Data;
     using CinemaApp.Data.Models;
-
     using Common.Utilities;
-
     using Contracts;
-
     using Data.Movie.Enums;
     using Data.Movie.Request;
     using Data.Movie.Response;
-
-    using Microsoft.EntityFrameworkCore;
 
     public class MovieService : IMovieService
     {
@@ -21,10 +17,13 @@
 
         private readonly BasicModelValidator modelValidator;
 
-        public MovieService(CinemaAppDbContext dbContext)
+        private readonly ILogger<MovieService> logger;
+
+        public MovieService(CinemaAppDbContext dbContext, ILogger<MovieService> logger)
         {
             this.dbContext = dbContext;
             this.modelValidator = new BasicModelValidator();
+            this.logger = logger;
         }
 
         public async Task<IEnumerable<GetAllMoviesResponseModel>> GetAllMoviesAsync()
@@ -88,6 +87,25 @@
             return response;
         }
 
+        public async Task<MovieBasicDataResponseModel?> GetMovieBasicDataByIdAsync(Guid id)
+        {
+            MovieBasicDataResponseModel? responseData = null;
+            Movie? dbMovie = await dbContext.Movies
+                .FindAsync(id);
+            if (dbMovie != null)
+            {
+                responseData = new MovieBasicDataResponseModel()
+                {
+                    Id = dbMovie.Id,
+                    Title = dbMovie.Title,
+                    Genre = dbMovie.Genre,
+                    ImageUrl = dbMovie.ImageUrl,
+                };
+            }
+
+            return responseData;
+        }
+
         public async Task<MovieExtendedDataResponseModel?> GetMovieExtendedDataByIdAsync(Guid id)
         {
             MovieExtendedDataResponseModel? responseData = null;
@@ -149,6 +167,88 @@
 
                     response.Status = MovieServiceResponseStatus.Success;
                 }
+            }
+            catch (Exception ex)
+            {
+                /* TODO: Log the exception details for further analysis and debugging. */
+                response.Status = MovieServiceResponseStatus.GeneralError;
+                response.ErrorMessages = new List<string?>() { ex.Message };
+            }
+
+            return response;
+        }
+
+        public async Task<MovieServiceStatusResponseModel> SoftDeleteMovieAsync(Guid id)
+        {
+            MovieServiceStatusResponseModel response = new MovieServiceStatusResponseModel()
+            {
+                Status = MovieServiceResponseStatus.GeneralError,
+                ErrorMessages = new List<string?>()
+            };
+
+            Movie? dbMovie = await dbContext.Movies
+                .FindAsync(id);
+            if (dbMovie == null)
+            {
+                response.Status = MovieServiceResponseStatus.NotFound;
+
+                return response;
+            }
+
+            if (dbMovie.IsDeleted)
+            {
+                this.logger.LogWarning($"Soft delete was performed for already deleted entity! Entity Id: {id}");
+                response.Status = MovieServiceResponseStatus.Success;
+            }
+            else
+            {
+                try
+                {
+                    dbMovie.IsDeleted = true;
+
+                    await dbContext.SaveChangesAsync();
+
+                    response.Status = MovieServiceResponseStatus.Success;
+                }
+                catch (Exception ex)
+                {
+                    /* TODO: Log the exception details for further analysis and debugging. */
+                    response.Status = MovieServiceResponseStatus.GeneralError;
+                    response.ErrorMessages = new List<string?>() { ex.Message };
+                }
+            }
+
+            return response;
+        }
+
+        public async Task<MovieServiceStatusResponseModel> HardDeleteMovieAsync(Guid id)
+        {
+            MovieServiceStatusResponseModel response = new MovieServiceStatusResponseModel()
+            {
+                Status = MovieServiceResponseStatus.GeneralError,
+                ErrorMessages = new List<string?>()
+            };
+
+            Movie? dbMovie = await dbContext.Movies
+                .FindAsync(id);
+            if (dbMovie == null)
+            {
+                response.Status = MovieServiceResponseStatus.NotFound;
+
+                return response;
+            }
+
+            if (dbMovie.IsDeleted)
+            {
+                this.logger.LogWarning($"Hard delete was performed for soft-deleted entity! Entity Id: {id}");
+            }
+
+            try
+            {
+                dbContext.Movies.Remove(dbMovie);
+                await dbContext.SaveChangesAsync();
+
+                response.Status = MovieServiceResponseStatus.Success;
             }
             catch (Exception ex)
             {
