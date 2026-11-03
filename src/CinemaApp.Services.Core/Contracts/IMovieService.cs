@@ -8,5 +8,9 @@
         Task<IEnumerable<GetAllMoviesResponseModel>> GetAllMoviesAsync();
 
         Task<MovieServiceStatusResponseModel> CreateMovieAsync(CreateMovieRequestData requestData);
+
+        Task<MovieExtendedDataResponseModel?> GetMovieExtendedDataByIdAsync(Guid id);
+
+        Task<MovieServiceStatusResponseModel> EditMovieAsync(EditMovieRequestData requestData);
     }
 }
