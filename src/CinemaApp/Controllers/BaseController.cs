@@ -8,10 +8,10 @@
     [Authorize]
     public abstract class BaseController : Controller
     {
-        protected string? GetUserId
+        protected string? GetUserId()
             => User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-        protected string? GetUserEmail
+        protected string? GetUserEmail()
             => User.FindFirstValue(ClaimTypes.Email);
 
         protected bool IsUserAuthenticated

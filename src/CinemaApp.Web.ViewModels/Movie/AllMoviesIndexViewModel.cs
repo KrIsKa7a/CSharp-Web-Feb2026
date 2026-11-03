@@ -13,5 +13,7 @@
         public string ReleaseDate { get; set; } = null!;
 
         public string ImageUrl { get; set; } = null!;
+
+        public bool IsInUserWatchlist { get; set; }
     }
 }

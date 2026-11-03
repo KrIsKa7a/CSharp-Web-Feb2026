@@ -17,10 +17,12 @@
     public class MovieController : BaseController
     {
         private readonly IMovieService movieService;
+        private readonly IWatchlistService watchlistService;
 
-        public MovieController(IMovieService movieService)
+        public MovieController(IMovieService movieService, IWatchlistService watchlistService)
         {
             this.movieService = movieService;
+            this.watchlistService = watchlistService;
         }
 
         [AllowAnonymous]
@@ -38,7 +40,16 @@
                     Director = m.Director,
                     ReleaseDate = m.ReleaseDate.ToString(MovieReleaseDateFormat, CultureInfo.InvariantCulture),
                     ImageUrl = m.ImageUrl ?? DefaultImageUrl
-                });
+                })
+                .ToArray();
+            if (IsUserAuthenticated)
+            {
+                foreach (AllMoviesIndexViewModel movie in allMoviesViewModel)
+                {
+                    movie.IsInUserWatchlist = await watchlistService
+                        .IsMovieInUserWatchlistAsync(GetUserId()!, Guid.Parse(movie.Id));
+                }
+            }
 
             return View(allMoviesViewModel);
         }
