@@ -1,18 +1,13 @@
 ﻿namespace CinemaApp.Services.Core
 {
-    using Azure;
+    using Microsoft.AspNetCore.Identity;
+    using Microsoft.EntityFrameworkCore;
 
     using CinemaApp.Data;
     using CinemaApp.Data.Models;
-    using CinemaApp.Services.Core.Data.Movie.Enums;
-
     using Contracts;
-
     using Data.Watchlist.Enums;
     using Data.Watchlist.Response;
-
-    using Microsoft.AspNetCore.Identity;
-    using Microsoft.EntityFrameworkCore;
 
     public class WatchlistService : IWatchlistService
     {
@@ -59,7 +54,7 @@
             return isMovieInWatchlistResponse;
         }
 
-        public async Task<WatchlistServiceStatusResponseModel> AddMovieToWatchlist(string userId, Guid movieId)
+        public async Task<WatchlistServiceStatusResponseModel> AddMovieToWatchlistAsync(string userId, Guid movieId)
         {
             WatchlistServiceStatusResponseModel responseData = new WatchlistServiceStatusResponseModel()
             {
@@ -100,6 +95,56 @@
                     };
 
                     await dbContext.UsersMovies.AddAsync(userMovie);
+                    await dbContext.SaveChangesAsync();
+
+                    responseData.Status = WatchlistServiceResponseStatus.Success;
+                }
+                catch (Exception ex)
+                {
+                    /* TODO: Log the exception details for further analysis and debugging. */
+                    responseData.Status = WatchlistServiceResponseStatus.GeneralError;
+                    responseData.ErrorMessages = new List<string?>() { ex.Message };
+                }
+            }
+
+            return responseData;
+        }
+
+        public async Task<WatchlistServiceStatusResponseModel> RemoveMovieFromWatchlistAsync(string userId, Guid movieId)
+        {
+            WatchlistServiceStatusResponseModel responseData = new WatchlistServiceStatusResponseModel()
+            {
+                Status = WatchlistServiceResponseStatus.GeneralError,
+                ErrorMessages = new List<string?>()
+            };
+
+            IdentityUser? dbUser = await userManager.FindByIdAsync(userId);
+            bool movieExists = await dbContext.Movies
+                .AnyAsync(m => m.Id == movieId);
+            if (movieExists)
+            {
+                responseData.Status = WatchlistServiceResponseStatus.InvalidReference;
+                responseData.ErrorMessages.Add("Referenced movie does not exist!");
+            }
+
+            if (dbUser == null)
+            {
+                responseData.Status = WatchlistServiceResponseStatus.InvalidReference;
+                responseData.ErrorMessages.Add("Referenced user does not exist!");
+            }
+
+            UserMovie? dbWatchlistEntry = await dbContext.UsersMovies
+                .SingleOrDefaultAsync(um => um.UserId.ToLower() == userId.ToLower() &&
+                                um.MovieId == movieId);
+            if (dbWatchlistEntry == null)
+            {
+                responseData.Status = WatchlistServiceResponseStatus.EntityNotFound;
+            }
+            else
+            {
+                try
+                {
+                    dbContext.UsersMovies.Remove(dbWatchlistEntry);
                     await dbContext.SaveChangesAsync();
 
                     responseData.Status = WatchlistServiceResponseStatus.Success;

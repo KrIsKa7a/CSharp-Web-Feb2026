@@ -5,7 +5,6 @@
     using Microsoft.AspNetCore.Mvc;
 
     using Services.Core.Contracts;
-    using Services.Core.Data.Watchlist;
     using Services.Core.Data.Watchlist.Enums;
     using ViewModels.Watchlist;
     using static GCommon.ApplicationConstants;
@@ -51,7 +50,7 @@
 
             string userId = GetUserId()!;
             WatchlistServiceStatusResponseModel responseData = await watchlistService
-                .AddMovieToWatchlist(userId, id.Value);
+                .AddMovieToWatchlistAsync(userId, id.Value);
             if (responseData.Status == WatchlistServiceResponseStatus.InvalidReference)
             {
                 return NotFound();
@@ -63,6 +62,35 @@
             }
 
             return RedirectToAction(nameof(Index), "Movie");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Remove([FromForm] Guid? id, [FromQuery] string? returnUrl)
+        {
+            if (id == null)
+            {
+                return BadRequest();
+            }
+
+            string userId = GetUserId()!;
+            WatchlistServiceStatusResponseModel responseData = await watchlistService
+                .RemoveMovieFromWatchlistAsync(userId, id.Value);
+            if (responseData.Status == WatchlistServiceResponseStatus.InvalidReference)
+            {
+                return NotFound();
+            }
+
+            if (responseData.Status == WatchlistServiceResponseStatus.GeneralError)
+            {
+                /* TODO: Add JS notification about the error */
+            }
+
+            if (returnUrl != null)
+            {
+                return LocalRedirect(returnUrl);
+            }
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }
