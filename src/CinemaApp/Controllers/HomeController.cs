@@ -1,8 +1,9 @@
 namespace CinemaApp.Web.Controllers
 {
     using System.Diagnostics;
-
+    using Infrastructure.Filters;
     using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
 
     using ViewModels;
@@ -10,10 +11,12 @@ namespace CinemaApp.Web.Controllers
     public class HomeController : BaseController
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly UserManager<IdentityUser> userManager;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, UserManager<IdentityUser> userManager)
         {
             _logger = logger;
+            this.userManager = userManager;
         }
 
         [AllowAnonymous]
@@ -25,6 +28,7 @@ namespace CinemaApp.Web.Controllers
 
         [AllowAnonymous]
         [HttpGet]
+        [ServiceFilter(typeof(PhoneRequiredActionFilter))]
         public IActionResult Privacy()
         {
             return View();
