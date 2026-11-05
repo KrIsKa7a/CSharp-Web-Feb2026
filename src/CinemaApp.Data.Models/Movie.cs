@@ -2,10 +2,10 @@
 {
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
-
+    using Common.Models;
     using static Common.EntityValidation.Movie;
 
-    public class Movie
+    public class Movie : ISoftDeleteableEntity
     {
         [Key]
         public Guid Id { get; set; }

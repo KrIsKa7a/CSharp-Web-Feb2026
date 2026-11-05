@@ -2,9 +2,9 @@
 {
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Logging;
-
-    using CinemaApp.Data;
+    
     using CinemaApp.Data.Models;
+    using CinemaApp.Data.Repository.Contracts;
     using Common.Utilities;
     using Contracts;
     using Data.Movie.Enums;
@@ -13,15 +13,14 @@
 
     public class MovieService : IMovieService
     {
-        private readonly CinemaAppDbContext dbContext;
+        private readonly IMovieRepository movieRepository;
 
         private readonly BasicModelValidator modelValidator;
-
         private readonly ILogger<MovieService> logger;
 
-        public MovieService(CinemaAppDbContext dbContext, ILogger<MovieService> logger)
+        public MovieService(IMovieRepository movieRepository, ILogger<MovieService> logger)
         {
-            this.dbContext = dbContext;
+            this.movieRepository = movieRepository;
             this.modelValidator = new BasicModelValidator();
             this.logger = logger;
         }
@@ -29,7 +28,8 @@
         public async Task<IEnumerable<GetAllMoviesResponseModel>> GetAllMoviesAsync()
         {
             /* TODO: Implement Mapperly for auto generation of mapping code */
-            IEnumerable<GetAllMoviesResponseModel> moviesResponseData = await dbContext.Movies
+            IEnumerable<GetAllMoviesResponseModel> moviesResponseData = await movieRepository
+                .AllAsNoTracking()
                 .OrderBy(m => m.Title)
                 .ThenBy(m => m.Genre)
                 .Select(m => new GetAllMoviesResponseModel()
@@ -71,8 +71,8 @@
 
                 try
                 {
-                    await dbContext.Movies.AddAsync(movie);
-                    await dbContext.SaveChangesAsync();
+                    await movieRepository.AddAsync(movie);
+                    await movieRepository.SaveChangesAsync();
 
                     response.Status = MovieServiceResponseStatus.Success;
                 }
@@ -90,8 +90,8 @@
         public async Task<MovieBasicDataResponseModel?> GetMovieBasicDataByIdAsync(Guid id)
         {
             MovieBasicDataResponseModel? responseData = null;
-            Movie? dbMovie = await dbContext.Movies
-                .FindAsync(id);
+            Movie? dbMovie = await movieRepository
+                .FindByIdAsync(id);
             if (dbMovie != null)
             {
                 responseData = new MovieBasicDataResponseModel()
@@ -109,8 +109,8 @@
         public async Task<MovieExtendedDataResponseModel?> GetMovieExtendedDataByIdAsync(Guid id)
         {
             MovieExtendedDataResponseModel? responseData = null;
-            Movie? dbMovie = await dbContext.Movies
-                .FindAsync(id);
+            Movie? dbMovie = await movieRepository
+                .FindByIdAsync(id);
             if (dbMovie != null)
             {
                 responseData = new MovieExtendedDataResponseModel()
@@ -137,8 +137,8 @@
                 ErrorMessages = new List<string?>()
             };
 
-            Movie? dbMovie = await dbContext.Movies
-                .FindAsync(requestData.Id);
+            Movie? dbMovie = await movieRepository
+                .FindByIdAsync(requestData.Id);
             if (dbMovie == null)
             {
                 response.Status = MovieServiceResponseStatus.NotFound;
@@ -162,8 +162,8 @@
                     dbMovie.Genre = requestData.Genre;
                     dbMovie.ReleaseDate = requestData.ReleaseDate;
                     dbMovie.Duration = requestData.Duration;
-
-                    await dbContext.SaveChangesAsync();
+                    
+                    await movieRepository.SaveChangesAsync();
 
                     response.Status = MovieServiceResponseStatus.Success;
                 }
@@ -186,8 +186,8 @@
                 ErrorMessages = new List<string?>()
             };
 
-            Movie? dbMovie = await dbContext.Movies
-                .FindAsync(id);
+            Movie? dbMovie = await movieRepository
+                .FindByIdAsync(id);
             if (dbMovie == null)
             {
                 response.Status = MovieServiceResponseStatus.NotFound;
@@ -204,9 +204,8 @@
             {
                 try
                 {
-                    dbMovie.IsDeleted = true;
-
-                    await dbContext.SaveChangesAsync();
+                    movieRepository.SoftDelete(dbMovie);
+                    await movieRepository.SaveChangesAsync();
 
                     response.Status = MovieServiceResponseStatus.Success;
                 }
@@ -229,8 +228,8 @@
                 ErrorMessages = new List<string?>()
             };
 
-            Movie? dbMovie = await dbContext.Movies
-                .FindAsync(id);
+            Movie? dbMovie = await movieRepository
+                .FindByIdAsync(id);
             if (dbMovie == null)
             {
                 response.Status = MovieServiceResponseStatus.NotFound;
@@ -245,8 +244,8 @@
 
             try
             {
-                dbContext.Movies.Remove(dbMovie);
-                await dbContext.SaveChangesAsync();
+                movieRepository.Remove(dbMovie);
+                await movieRepository.SaveChangesAsync();
 
                 response.Status = MovieServiceResponseStatus.Success;
             }

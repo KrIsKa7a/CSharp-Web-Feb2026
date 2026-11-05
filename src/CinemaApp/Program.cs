@@ -4,6 +4,7 @@ namespace CinemaApp.Web
     using Microsoft.EntityFrameworkCore;
 
     using Data;
+    using Infrastructure.Extensions;
     using Services.Core;
     using Services.Core.Contracts;
 
@@ -20,6 +21,8 @@ namespace CinemaApp.Web
                 options.UseSqlServer(connectionString);
             });
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+
+            builder.Services.RegisterRepositoriesFromAssembly(typeof(CinemaAppDbContext).Assembly);
 
             /* TODO: Implement Automatic Service Discovery with Reflection */
             builder.Services.AddScoped<IMovieService, MovieService>();
