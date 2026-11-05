@@ -15,6 +15,7 @@
 }
 
 .error-page.error-400 { --accent: #ff9800; }
+.error-page.error-403 { --accent: #9c6bff; }
 .error-page.error-404 { --accent: #ffc107; }
 .error-page.error-500 { --accent: #e53935; }
 

@@ -45,6 +45,8 @@ namespace CinemaApp.Web.Controllers
             {
                 case StatusCodes.Status400BadRequest:
                     return View("BadRequest");
+                case StatusCodes.Status403Forbidden:
+                    return View("Forbidden");
                 case StatusCodes.Status404NotFound:
                     return View("NotFound");
                 case null:

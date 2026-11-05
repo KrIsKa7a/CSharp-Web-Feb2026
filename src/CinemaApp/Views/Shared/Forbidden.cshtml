@@ -1,0 +1,13 @@
+@{
+    ViewData["Title"] = "403 Forbidden";
+    ViewData["ErrorCode"] = "403";
+    ViewData["ErrorTitle"] = "Restricted Screening";
+    ViewData["ErrorMessage"] = "You don't have permission to access this page.";
+    ViewData["ErrorIcon"] = "bi-shield-lock";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/error-pages.css" asp-append-version="true" />
+}
+
+<partial name="_ErrorPagePartial" />
