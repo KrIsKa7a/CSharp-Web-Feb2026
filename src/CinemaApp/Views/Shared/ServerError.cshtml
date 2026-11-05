@@ -1,0 +1,13 @@
+@{
+    ViewData["Title"] = "500 Internal Server Error";
+    ViewData["ErrorCode"] = "500";
+    ViewData["ErrorTitle"] = "Technical Difficulties";
+    ViewData["ErrorMessage"] = "Something went wrong on our end. The projector jammed - please try again later.";
+    ViewData["ErrorIcon"] = "bi-x-octagon";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/error-pages.css" asp-append-version="true" />
+}
+
+<partial name="_ErrorPagePartial" />

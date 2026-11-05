@@ -1,0 +1,112 @@
+.error-page {
+    position: relative;
+    overflow: hidden;
+    min-height: 70vh;
+    margin: 1.5rem 0;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 3rem 1rem;
+    color: #fff;
+    background: radial-gradient(circle at 50% 0%, #2b2b36 0%, #15151b 70%);
+    --accent: #ffc107;
+}
+
+.error-page.error-400 { --accent: #ff9800; }
+.error-page.error-404 { --accent: #ffc107; }
+.error-page.error-500 { --accent: #e53935; }
+
+.error-page::before {
+    content: "";
+    position: absolute;
+    top: -20%;
+    left: 50%;
+    width: 340px;
+    height: 120%;
+    transform: translateX(-50%);
+    background: linear-gradient(to bottom, color-mix(in srgb, var(--accent) 35%, transparent), transparent 80%);
+    clip-path: polygon(42% 0, 58% 0, 100% 100%, 0 100%);
+    animation: projector-flicker 3s infinite;
+    pointer-events: none;
+}
+
+.error-content {
+    position: relative;
+    z-index: 1;
+    animation: fade-up .8s ease-out both;
+}
+
+.error-icon {
+    font-size: 4rem;
+    color: var(--accent);
+    display: inline-block;
+    animation: float 3s ease-in-out infinite;
+}
+
+.error-code {
+    font-size: clamp(5rem, 18vw, 10rem);
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: .05em;
+    color: var(--accent);
+    text-shadow: 0 0 20px color-mix(in srgb, var(--accent) 60%, transparent);
+    animation: glow 2.5s ease-in-out infinite alternate;
+}
+
+.error-title {
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-top: .5rem;
+}
+
+.error-message {
+    max-width: 520px;
+    margin: 1rem auto 1.5rem;
+    color: #c9c9d1;
+}
+
+.error-request-id {
+    display: block;
+    margin-top: 1.5rem;
+    font-size: .8rem;
+    color: #8a8a94;
+}
+
+.error-page .btn {
+    transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.error-page .btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .4);
+}
+
+@keyframes fade-up {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0) rotate(-4deg); }
+    50% { transform: translateY(-12px) rotate(4deg); }
+}
+
+@keyframes glow {
+    from { text-shadow: 0 0 10px color-mix(in srgb, var(--accent) 40%, transparent); }
+    to { text-shadow: 0 0 35px color-mix(in srgb, var(--accent) 80%, transparent); }
+}
+
+@keyframes projector-flicker {
+    0%, 100% { opacity: .9; }
+    45% { opacity: .6; }
+    50% { opacity: 1; }
+    55% { opacity: .5; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .error-page *, .error-page::before {
+        animation: none !important;
+    }
+}

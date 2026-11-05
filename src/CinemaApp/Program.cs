@@ -55,6 +55,8 @@ namespace CinemaApp.Web
 
             app.UseRouting();
 
+            app.UseStatusCodePagesWithReExecute("/Home/Error", "?statusCode={0}");
+
             app.UseAuthentication();
             app.UseAuthorization();
 
