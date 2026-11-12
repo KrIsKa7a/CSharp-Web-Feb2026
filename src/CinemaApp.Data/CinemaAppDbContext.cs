@@ -17,6 +17,14 @@
 
         public virtual DbSet<UserMovie> UsersMovies { get; set; } = null!;
 
+        public virtual DbSet<Cinema> Cinemas { get; set; } = null!;
+
+        public virtual DbSet<CinemaMovie> Projections { get; set; } = null!;
+
+        public virtual DbSet<Ticket> Tickets { get; set; } = null!;
+
+        public virtual DbSet<UserTicket> UsersTickets { get; set; } = null!;
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

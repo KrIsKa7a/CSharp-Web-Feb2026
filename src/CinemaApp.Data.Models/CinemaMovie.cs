@@ -1,15 +1,16 @@
 ﻿namespace CinemaApp.Data.Models
 {
+    using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
-
-    using Microsoft.EntityFrameworkCore;
 
     using Common.Models;
     using static Common.EntityValidation.CinemaMovie;
-
-    [PrimaryKey(nameof(MovieId), nameof(CinemaId))]
+    
     public class CinemaMovie : ISoftDeleteableEntity
     {
+        [Key]
+        public Guid Id { get; set; }
+
         [ForeignKey(nameof(Movie))]
         public Guid MovieId { get; set; }
 
@@ -26,5 +27,8 @@
 
         [Column(TypeName = ShowtimeColumnType)]
         public DateTime Showtime { get; set; }
+
+        public virtual ICollection<Ticket> Tickets { get; set; }
+            = new HashSet<Ticket>();
     }
 }
