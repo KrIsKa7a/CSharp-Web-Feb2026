@@ -129,6 +129,37 @@
             return View(movieDetailsViewModel);
         }
 
+        [AllowAnonymous]
+        [HttpGet]
+        public async Task<IActionResult> DetailsPartial([FromRoute] Guid? id)
+        {
+            if (id == null)
+            {
+                return BadRequest();
+            }
+
+            MovieExtendedDataResponseModel? movieExtendedData = await movieService
+                .GetMovieExtendedDataByIdAsync(id.Value);
+            if (movieExtendedData == null)
+            {
+                return NotFound();
+            }
+
+            MovieDetailsViewModel movieDetailsViewModel = new MovieDetailsViewModel()
+            {
+                Id = movieExtendedData.Id.ToString(),
+                Title = movieExtendedData.Title,
+                Genre = movieExtendedData.Genre,
+                Director = movieExtendedData.Director,
+                ReleaseDate = movieExtendedData.ReleaseDate.ToString(MovieReleaseDateFormat),
+                Description = movieExtendedData.Description,
+                Duration = movieExtendedData.Duration,
+                ImageUrl = movieExtendedData.ImageUrl ?? DefaultImageUrl
+            };
+
+            return PartialView("_MovieDetailsPartial", movieDetailsViewModel);
+        }
+
         [HttpGet]
         public async Task<IActionResult> Edit([FromRoute] Guid? id)
         {
