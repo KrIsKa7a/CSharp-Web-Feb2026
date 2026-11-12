@@ -35,5 +35,8 @@
         public string? ImageUrl { get; set; }
 
         public bool IsDeleted { get; set; }
+
+        public virtual ICollection<CinemaMovie> MovieProjections { get; set; }
+            = new HashSet<CinemaMovie>();
     }
 }
