@@ -44,6 +44,29 @@ namespace CinemaApp.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Cinemas");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("e51cd89f-1495-4f8a-8e92-93a1d56d53f1"),
+                            IsDeleted = false,
+                            Location = "Sofia",
+                            Name = "Cine Grand Mall"
+                        },
+                        new
+                        {
+                            Id = new Guid("76fa26f7-f48f-4397-bf96-744a74128234"),
+                            IsDeleted = false,
+                            Location = "Plovdiv",
+                            Name = "Movie Palace"
+                        },
+                        new
+                        {
+                            Id = new Guid("5ad7fbe7-f76f-4e98-826f-b85de6169939"),
+                            IsDeleted = false,
+                            Location = "Varna",
+                            Name = "Sea View Cinema"
+                        });
                 });
 
             modelBuilder.Entity("CinemaApp.Data.Models.CinemaMovie", b =>
@@ -75,6 +98,89 @@ namespace CinemaApp.Data.Migrations
                         .IsUnique();
 
                     b.ToTable("Projections");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("5465ab3a-21ce-4cd5-b35b-c5967f1ce98e"),
+                            AvailableTickets = 120,
+                            CinemaId = new Guid("e51cd89f-1495-4f8a-8e92-93a1d56d53f1"),
+                            IsDeleted = false,
+                            MovieId = new Guid("4571bf2f-dbb3-446c-a92a-07cb77f47ed0"),
+                            Showtime = new DateTime(2026, 11, 14, 19, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = new Guid("2ff9ec78-3226-4f7d-a8d4-b7744bc40616"),
+                            AvailableTickets = 100,
+                            CinemaId = new Guid("e51cd89f-1495-4f8a-8e92-93a1d56d53f1"),
+                            IsDeleted = false,
+                            MovieId = new Guid("e673a37c-8ffc-46bf-a66d-18b8078d7c94"),
+                            Showtime = new DateTime(2026, 11, 15, 20, 30, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = new Guid("da876235-1f08-4e0f-b177-c078bbdeb0f1"),
+                            AvailableTickets = 110,
+                            CinemaId = new Guid("e51cd89f-1495-4f8a-8e92-93a1d56d53f1"),
+                            IsDeleted = false,
+                            MovieId = new Guid("2f22c0dd-f7b9-46c3-a753-0d076dafb489"),
+                            Showtime = new DateTime(2026, 11, 16, 18, 15, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = new Guid("b97e76f3-3646-4267-8f59-76a37c8e70dc"),
+                            AvailableTickets = 130,
+                            CinemaId = new Guid("76fa26f7-f48f-4397-bf96-744a74128234"),
+                            IsDeleted = false,
+                            MovieId = new Guid("4571bf2f-dbb3-446c-a92a-07cb77f47ed0"),
+                            Showtime = new DateTime(2026, 11, 14, 21, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = new Guid("302763cb-a86b-4f4b-a66b-f44fbd949836"),
+                            AvailableTickets = 90,
+                            CinemaId = new Guid("76fa26f7-f48f-4397-bf96-744a74128234"),
+                            IsDeleted = false,
+                            MovieId = new Guid("e673a37c-8ffc-46bf-a66d-18b8078d7c94"),
+                            Showtime = new DateTime(2026, 11, 15, 19, 30, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = new Guid("4e203f0f-fafe-44f9-b26c-f4e8a1f2da76"),
+                            AvailableTickets = 125,
+                            CinemaId = new Guid("76fa26f7-f48f-4397-bf96-744a74128234"),
+                            IsDeleted = false,
+                            MovieId = new Guid("2f22c0dd-f7b9-46c3-a753-0d076dafb489"),
+                            Showtime = new DateTime(2026, 11, 16, 20, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = new Guid("4fc4cc82-f924-4875-8abc-f2d15898bc7d"),
+                            AvailableTickets = 140,
+                            CinemaId = new Guid("5ad7fbe7-f76f-4e98-826f-b85de6169939"),
+                            IsDeleted = false,
+                            MovieId = new Guid("4571bf2f-dbb3-446c-a92a-07cb77f47ed0"),
+                            Showtime = new DateTime(2026, 11, 14, 18, 30, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = new Guid("5e6a89cc-f9fd-4f49-9877-e21f211c5cd4"),
+                            AvailableTickets = 95,
+                            CinemaId = new Guid("5ad7fbe7-f76f-4e98-826f-b85de6169939"),
+                            IsDeleted = false,
+                            MovieId = new Guid("e673a37c-8ffc-46bf-a66d-18b8078d7c94"),
+                            Showtime = new DateTime(2026, 11, 15, 21, 15, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = new Guid("8051818b-9f0f-417f-8ee3-117d3fbbf154"),
+                            AvailableTickets = 115,
+                            CinemaId = new Guid("5ad7fbe7-f76f-4e98-826f-b85de6169939"),
+                            IsDeleted = false,
+                            MovieId = new Guid("2f22c0dd-f7b9-46c3-a753-0d076dafb489"),
+                            Showtime = new DateTime(2026, 11, 16, 19, 45, 0, 0, DateTimeKind.Unspecified)
+                        });
                 });
 
             modelBuilder.Entity("CinemaApp.Data.Models.Movie", b =>
