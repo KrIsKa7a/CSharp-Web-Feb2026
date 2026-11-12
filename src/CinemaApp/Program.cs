@@ -28,6 +28,7 @@ namespace CinemaApp.Web
             /* TODO: Implement Automatic Service Discovery with Reflection */
             builder.Services.AddScoped<IMovieService, MovieService>();
             builder.Services.AddScoped<IWatchlistService, WatchlistService>();
+            builder.Services.AddScoped<ICinemaService, CinemaService>();
 
             builder.Services.AddScoped<PhoneRequiredActionFilter>();
 
