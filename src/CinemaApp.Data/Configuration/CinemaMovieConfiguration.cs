@@ -30,7 +30,7 @@
                                       cm.Cinema.IsDeleted == false);
 
             builder
-                .HasIndex(cm => new { cm.CinemaId, cm.MovieId })
+                .HasIndex(cm => new { cm.CinemaId, cm.MovieId, cm.Showtime })
                 .IsUnique();
 
             builder.HasData(CinemaMoviesSeedData);

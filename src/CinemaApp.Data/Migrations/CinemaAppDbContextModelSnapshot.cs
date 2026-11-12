@@ -94,7 +94,7 @@ namespace CinemaApp.Data.Migrations
 
                     b.HasIndex("MovieId");
 
-                    b.HasIndex("CinemaId", "MovieId")
+                    b.HasIndex("CinemaId", "MovieId", "Showtime")
                         .IsUnique();
 
                     b.ToTable("Projections");
