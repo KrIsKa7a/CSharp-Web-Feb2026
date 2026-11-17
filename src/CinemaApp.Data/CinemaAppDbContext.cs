@@ -1,11 +1,12 @@
 ﻿namespace CinemaApp.Data
 {
+    using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore;
 
     using Models;
 
-    public class CinemaAppDbContext : IdentityDbContext
+    public class CinemaAppDbContext : IdentityDbContext<IdentityUser, IdentityRole, string>
     {
         public CinemaAppDbContext(DbContextOptions<CinemaAppDbContext> options)
             : base(options)

@@ -4,6 +4,7 @@ namespace CinemaApp.Web
     using Microsoft.EntityFrameworkCore;
 
     using Data;
+    using Data.Seeding.Utilities;
     using Infrastructure.Extensions;
     using Infrastructure.Filters;
     using Services.Core;
@@ -46,16 +47,22 @@ namespace CinemaApp.Web
 
             builder.Services.AddScoped<PhoneRequiredActionFilter>();
 
-            builder.Services.AddDefaultIdentity<IdentityUser>(options =>
+            builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
                 {
                     ConfigureIdentityOptions(builder.Configuration, options);
                 })
+                .AddRoles<IdentityRole>()
+                .AddUserManager<UserManager<IdentityUser>>()
+                .AddSignInManager<SignInManager<IdentityUser>>()
+                .AddDefaultTokenProviders()
+                .AddDefaultUI()
                 .AddEntityFrameworkStores<CinemaAppDbContext>();
 
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
             builder.Services.AddControllersWithViews();
+            builder.Services.AddRazorPages();
 
             WebApplication app = builder.Build();
 
@@ -88,9 +95,14 @@ namespace CinemaApp.Web
             app.UseCors("AllowSoftUniDomain");
 
             app.MapControllerRoute(
+                name: "areas",
+                pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+            app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
             app.MapRazorPages();
+
+            UseDefaultRoles(app);
 
             app.Run();
         }
@@ -116,6 +128,14 @@ namespace CinemaApp.Web
 
             options.User.RequireUniqueEmail = configuration
                 .GetValue<bool>("IdentitySettings:User:RequireUniqueEmail");
+        }
+
+        private static void UseDefaultRoles(WebApplication app)
+        {
+            using IServiceScope serviceScope = app.Services.CreateScope();
+            IServiceProvider serviceProvider = serviceScope.ServiceProvider;
+
+            IdentitySeeder.SeedRoles(serviceProvider);
         }
     }
 }
