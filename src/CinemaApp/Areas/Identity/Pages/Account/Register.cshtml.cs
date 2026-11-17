@@ -8,6 +8,8 @@ namespace CinemaApp.Web.Areas.Identity.Pages.Account
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.RazorPages;
 
+    using static GCommon.ApplicationConstants;
+
     public class RegisterModel : PageModel
     {
         private readonly SignInManager<IdentityUser> signInManager;
@@ -98,14 +100,20 @@ namespace CinemaApp.Web.Areas.Identity.Pages.Account
                 {
                     logger.LogInformation("User created a new account with password.");
 
-                    if (userManager.Options.SignIn.RequireConfirmedAccount)
+                    result = await userManager.AddToRoleAsync(user, UserRoleName);
+
+                    if (result.Succeeded)
                     {
-                        return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });
-                    }
-                    else
-                    {
-                        await signInManager.SignInAsync(user, isPersistent: false);
-                        return LocalRedirect(returnUrl);
+                        if (userManager.Options.SignIn.RequireConfirmedAccount)
+                        {
+                            return RedirectToPage("RegisterConfirmation",
+                                new { email = Input.Email, returnUrl = returnUrl });
+                        }
+                        else
+                        {
+                            await signInManager.SignInAsync(user, isPersistent: false);
+                            return LocalRedirect(returnUrl);
+                        }
                     }
                 }
 

@@ -31,5 +31,40 @@
                 }
             }
         }
+
+        public static void SeedAdminUser(IServiceProvider serviceProvider, string adminEmail, string adminPassword)
+        {
+            UserManager<IdentityUser> userManager = serviceProvider
+                .GetRequiredService<UserManager<IdentityUser>>();
+
+            IdentityUser? adminUser = userManager.FindByNameAsync(adminEmail)
+                .GetAwaiter()
+                .GetResult();
+            if (adminUser != null)
+            {
+                return;
+            }
+
+            adminUser = new IdentityUser(adminEmail)
+            {
+                Email = adminEmail
+            };
+
+            IdentityResult result = userManager.CreateAsync(adminUser, adminPassword)
+                .GetAwaiter()
+                .GetResult();
+            if (!result.Succeeded)
+            {
+                throw new InvalidOperationException($"Admin user {adminEmail} can't be seeded!");
+            }
+
+            result = userManager.AddToRoleAsync(adminUser, DefaultRoles[2])
+                .GetAwaiter()
+                .GetResult();
+            if (!result.Succeeded)
+            {
+                throw new InvalidOperationException($"Admin user {adminEmail} can't be added to role {DefaultRoles[2]}!");
+            }
+        }
     }
 }

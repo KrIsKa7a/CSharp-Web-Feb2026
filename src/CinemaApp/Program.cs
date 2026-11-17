@@ -102,7 +102,7 @@ namespace CinemaApp.Web
                 pattern: "{controller=Home}/{action=Index}/{id?}");
             app.MapRazorPages();
 
-            UseDefaultRoles(app);
+            UseDefaultRoles(app, app.Configuration);
 
             app.Run();
         }
@@ -130,12 +130,18 @@ namespace CinemaApp.Web
                 .GetValue<bool>("IdentitySettings:User:RequireUniqueEmail");
         }
 
-        private static void UseDefaultRoles(WebApplication app)
+        private static void UseDefaultRoles(WebApplication app, IConfiguration configuration)
         {
             using IServiceScope serviceScope = app.Services.CreateScope();
             IServiceProvider serviceProvider = serviceScope.ServiceProvider;
 
+            string adminEmail = configuration.GetValue<string>("UserSeed:AdminAccount:Email") 
+                                ?? throw new ArgumentException();
+            string adminPassword = configuration.GetValue<string>("UserSeed:AdminAccount:Password")
+                                   ?? throw new ArgumentException();
+
             IdentitySeeder.SeedRoles(serviceProvider);
+            IdentitySeeder.SeedAdminUser(serviceProvider, adminEmail, adminPassword);
         }
     }
 }
