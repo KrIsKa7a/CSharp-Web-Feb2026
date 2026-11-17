@@ -61,5 +61,10 @@
 
             public const string ReleaseDateFormatRegexPattern = @"^\d{2}\/\d{2}\/\d{4}$";
         }
+
+        public static class Ticket
+        {
+            public const int MinimumPurchaseQuantity = 1;
+        }
     }
 }

@@ -21,28 +21,59 @@
 
         $("#buyTicketModalLabel").html(`Buy Ticket - ${cinemaName} <br><small class="text-muted">${movieName}</small>`);
 
+        const $select = $("#projectionDate");
+        $select.empty().append('<option value="">Select a date</option>');
+        $("#errorMessage").addClass("d-none");
+
+        $.ajax({
+            url: "/api/ProjectionApi/GetDates",
+            method: "GET",
+            data: { cinemaId: cinemaId, movieId: movieId },
+            success: function (data) {
+                data.forEach(function (d) {
+                    const value = d.id;
+                    const text = d.showtime;
+                    $select.append($("<option>").val(value).text(text));
+                });
+            },
+            error: function () {
+                Swal.fire("Error!", "Could not load projection dates.", "error");
+            }
+        });
+
         $("#buyTicketModal").modal("show");
     });
 
-    $("#buyTicketButton").on("click", function () {
+    $("#buyTicketButton").on("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
         const requestData = {
             cinemaId: $("#cinemaId").val().trim(),
             movieId: $("#movieId").val().trim(),
-            quantity: parseInt($("#quantity").val(), 10)
+            projectionId: $("#projectionDate").val(),
+            quantity: parseInt($("#quantity").val(), 10),
+            __RequestVerificationToken: $("input[name=__RequestVerificationToken]").val(),
         };
 
         console.log("Submitting Request:", requestData); // ✅ Added for Debugging
+
+        if (!requestData.projectionId) {
+            $("#errorMessage").text("Please select a projection date.").removeClass("d-none");
+            return;
+        }
 
         if (!requestData.quantity || requestData.quantity < 1) {
             $("#errorMessage").text("Please enter a valid ticket quantity.").removeClass("d-none");
             return;
         }
 
+
         $.ajax({
             url: "/api/TicketApi/BuyTicket",
             method: "POST",
-            contentType: "application/json",
-            data: JSON.stringify(requestData),
+            contentType: "application/x-www-form-urlencoded",
+            data: requestData,
             success: function (response) {
                 console.log("Success Response:", response); // ✅ Log the success response
                 Swal.fire("Success!", "Your ticket has been purchased successfully!", "success");
@@ -64,7 +95,6 @@
 
                 Swal.fire("Error!", errorMessage, "error");
             }
-
         });
     });
 });

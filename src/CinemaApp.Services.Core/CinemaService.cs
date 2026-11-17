@@ -63,5 +63,20 @@
 
             return responseData;
         }
+
+        public async Task<string?> GetCinemaNameByIdAsync(Guid cinemaId)
+        {
+            string? cinemaName = null;
+
+            Cinema? dbCinema = await cinemaRepository
+                .AllAsNoTracking()
+                .SingleOrDefaultAsync(c => c.Id == cinemaId);
+            if (dbCinema != null)
+            {
+                cinemaName = dbCinema.Name;
+            }
+
+            return cinemaName;
+        }
     }
 }

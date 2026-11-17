@@ -30,6 +30,7 @@ namespace CinemaApp.Web
             builder.Services.AddScoped<IWatchlistService, WatchlistService>();
             builder.Services.AddScoped<ICinemaService, CinemaService>();
             builder.Services.AddScoped<ITicketService, TicketService>();
+            builder.Services.AddScoped<IProjectionService, ProjectionService>();
 
             /* Setup of example CORS policy */
             /* .AllowAnyOrigin() should be used only for CDN API Endpoint */

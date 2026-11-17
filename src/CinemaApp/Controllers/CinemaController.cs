@@ -52,8 +52,9 @@
                 return NotFound();
             }
 
-            IEnumerable<CinemaProgramViewModel> programViewModel = responseData.Movies
-                .Select(m => new CinemaProgramViewModel()
+            string cinemaName = (await cinemaService.GetCinemaNameByIdAsync(id.Value))!;
+            IEnumerable<CinemaMovieViewModel> cinemaMovies = responseData.Movies
+                .Select(m => new CinemaMovieViewModel()
                 {
                     Id = m.Id,
                     Title = m.Title,
@@ -61,6 +62,12 @@
                     ImageUrl = m.ImageUrl ?? DefaultImageUrl
                 })
                 .ToArray();
+            CinemaProgramViewModel programViewModel = new CinemaProgramViewModel()
+            {
+                CinemaId = id.Value,
+                CinemaName = cinemaName,
+                Movies = cinemaMovies
+            };
 
             return View(programViewModel);
         }
