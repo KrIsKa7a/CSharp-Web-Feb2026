@@ -19,6 +19,7 @@
     viewDetailsButtons.forEach(button => {
         button.addEventListener("click", function (event) {
             event.preventDefault();
+            event.stopPropagation();
 
             let movieId = this.getAttribute("data-movie-id");
             console.log(`🎬 Fetching details for movie ID: ${movieId}`);
@@ -80,15 +81,24 @@
         setTimeout(() => {
             console.log("🔄 Attaching dynamic event listeners...");
 
-            $("#add-to-watchlist-btn").off("click").on("click", function () {
+            $("#add-to-watchlist-btn").off("click").on("click", function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+
                 let movieId = $(this).data("movie-id");
+                let requestVerificationToken = $("input[name=__RequestVerificationToken]").val();
+
+                let requestData = {
+                    Id: movieId,
+                    __RequestVerificationToken: requestVerificationToken
+                };
 
                 if (!movieId) {
                     Swal.fire("Error!", "Movie ID is missing.", "error");
                     return;
                 }
 
-                $.post("/Watchlist/Add", { Id: movieId })
+                $.post("/Watchlist/Add", requestData)
                     .done(function () {
                         Swal.fire({
                             title: "Added!",
