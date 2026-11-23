@@ -92,6 +92,8 @@ namespace CinemaApp.Web
             app.UseAuthentication();
             app.UseAuthorization();
 
+            app.UseAdminHomePageRedirection("/Admin/Home");
+
             app.UseCors("AllowSoftUniDomain");
 
             app.MapControllerRoute(

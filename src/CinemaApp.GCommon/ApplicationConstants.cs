@@ -7,5 +7,6 @@
         public const string PricesFormat = "F2";
         public const string UserRoleName = "User";
         public const string AdminRoleName = "Admin";
+        public const string ApplicationHomePagePath = "/";
     }
 }
