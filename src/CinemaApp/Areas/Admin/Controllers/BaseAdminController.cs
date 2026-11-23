@@ -7,7 +7,7 @@
 
     [Area("Admin")]
     [Authorize(Roles = AdminRoleName)]
-    //[AutoValidateAntiforgeryToken]
+    [AutoValidateAntiforgeryToken]
     public abstract class BaseAdminController : Controller
     {
         
