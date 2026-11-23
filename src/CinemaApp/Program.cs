@@ -11,6 +11,9 @@ namespace CinemaApp.Web
     using Infrastructure.Utilities.Contracts;
     using Services.Core;
     using Services.Core.Contracts;
+    using Sidio.Sitemap.AspNetCore;
+    using Sidio.Sitemap.AspNetCore.Middleware;
+    using Sidio.Sitemap.Core.Services;
 
     public class Program
     {
@@ -69,6 +72,15 @@ namespace CinemaApp.Web
                 opt.ValidationInterval = TimeSpan.FromMinutes(1);
             });
 
+            builder.Services
+                .AddHttpContextAccessor()
+                .AddDefaultSitemapServices<HttpContextBaseUrlProvider>()
+                .AddSitemapMiddleware(opt =>
+                {
+                    opt.EndpointInclusionMode = EndpointInclusionMode.OptOut;
+                    opt.CacheEnabled = true;
+                });
+
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
@@ -106,6 +118,7 @@ namespace CinemaApp.Web
             app.UseAdminHomePageRedirection("/Admin/Home");
 
             app.UseCors("AllowSoftUniDomain");
+            app.UseSitemap();
 
             app.MapControllerRoute(
                 name: "areas",
