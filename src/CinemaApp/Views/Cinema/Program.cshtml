@@ -1,11 +1,57 @@
 ﻿@using CinemaApp.Web.ViewModels.Cinema
+@using System.Text.Json
+@using System.Text.Json.Serialization
 @model CinemaProgramViewModel
 
 @{
-    ViewData["Title"] = "Cinema Program";
+    string pageTitle = $"Now Showing at {Model.CinemaName} | Cinema Program";
+    string metaDescription = $"See all movies now showing at {Model.CinemaName}. View details and buy cinema tickets online.";
+    string canonicalUrl = $"{Context.Request.Scheme}://{Context.Request.Host}{Context.Request.Path}{Context.Request.QueryString}";
+
+    ViewData["Title"] = pageTitle;
+    ViewData["MetaDescription"] = metaDescription;
+    ViewData["MetaRobots"] = "index,follow";
+    ViewData["CanonicalUrl"] = canonicalUrl;
+
+    var screeningEvents = Model.Movies.Select(movie =>
+    {
+        var workPresented = new Dictionary<string, object?>
+        {
+            ["@type"] = "Movie",
+            ["name"] = movie.Title,
+            ["image"] = movie.ImageUrl
+        };
+
+        if (!string.IsNullOrWhiteSpace(movie.Director))
+        {
+            workPresented["director"] = new Dictionary<string, object?>
+            {
+                ["@type"] = "Person",
+                ["name"] = movie.Director
+            };
+        }
+
+        return new Dictionary<string, object?>
+        {
+            ["@type"] = "ScreeningEvent",
+            ["workPresented"] = workPresented
+        };
+    }).ToList();
+
+    var schema = new Dictionary<string, object?>
+    {
+        ["@context"] = "https://schema.org",
+        ["@type"] = "MovieTheater",
+        ["name"] = Model.CinemaName,
+        ["event"] = screeningEvents
+    };
+
+    string schemaJson = JsonSerializer.Serialize(
+        schema,
+        new JsonSerializerOptions { DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull });
 }
 
-<div class="cinema-bg bg-dark text-light">
+<section class="cinema-bg bg-dark text-light" aria-label="Cinema program">
     <div class="container mt-4">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h1 class="text-light fw-bold">Now Showing @@ @Model.CinemaName</h1>
@@ -17,15 +63,17 @@
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3" id="movieContainer">
             @foreach (var movie in Model.Movies)
             {
-                <div class="col movie-card">
+                <article class="col movie-card">
                     <div class="card shadow-lg border-0 rounded-3 h-100 cinema-program-card p-3">
                         <img src="@movie.ImageUrl"
                              class="movie-card-img-top img-fluid rounded"
-                             alt="@movie.Title"
+                             alt="@($"{movie.Title} movie poster")"
+                             loading="lazy"
+                             decoding="async"
                              style="height: 250px; object-fit: cover;">
 
                         <div class="card-body text-center">
-                            <h6 class="card-title fw-bold text-dark">@movie.Title</h6>
+                            <h2 class="card-title h6 fw-bold text-dark">@movie.Title</h2>
                             <p class="card-text text-muted small">Director: @movie.Director</p>
 
                             <div class="d-flex flex-column gap-2 mt-3">
@@ -48,12 +96,12 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </article>
             }
 
         </div>
     </div>
-</div>
+</section>
 
 <div class="modal fade" id="movieDetailsModal" tabindex="-1" aria-labelledby="movieDetailsLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -83,6 +131,7 @@
 
 
 @section Scripts {
+    <script type="application/ld+json">@Html.Raw(schemaJson)</script>
     <script src="~/js/movies.js"></script>
     <script src="~/js/buyTickets.js"></script>
     <script src="~/js/pagination.js"></script>

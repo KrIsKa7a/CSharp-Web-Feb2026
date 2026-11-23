@@ -38,6 +38,7 @@
 
         [AllowAnonymous]
         [HttpGet]
+        [Route("{action}/{slug}/{id}")]
         public async Task<IActionResult> Program([FromRoute] Guid? id)
         {
             if (id == null)

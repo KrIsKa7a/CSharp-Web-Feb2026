@@ -7,6 +7,8 @@ namespace CinemaApp.Web
     using Data.Seeding.Utilities;
     using Infrastructure.Extensions;
     using Infrastructure.Filters;
+    using Infrastructure.Utilities;
+    using Infrastructure.Utilities.Contracts;
     using Services.Core;
     using Services.Core.Contracts;
 
@@ -32,6 +34,8 @@ namespace CinemaApp.Web
             builder.Services.AddScoped<ICinemaService, CinemaService>();
             builder.Services.AddScoped<ITicketService, TicketService>();
             builder.Services.AddScoped<IProjectionService, ProjectionService>();
+
+            builder.Services.AddScoped<ISlugGenerator, SlugGenerator>();
 
             /* Setup of example CORS policy */
             /* .AllowAnyOrigin() should be used only for CDN API Endpoint */
@@ -106,6 +110,9 @@ namespace CinemaApp.Web
             app.MapControllerRoute(
                 name: "areas",
                 pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+            app.MapControllerRoute(
+                name: "slug",
+                pattern: "{controller=Cinema}/{action=Index}/{slug:exists}/{id:exists}");
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");

@@ -2,6 +2,10 @@
 @{
 	int currentYear = DateTime.UtcNow.Year;
 	string footerNote = (2025 == currentYear) ? $"{currentYear}" : $"{2025} - {currentYear}";
+    string pageTitle = ViewData["Title"] as string ?? "CinemaWebApp";
+    string metaDescription = ViewData["MetaDescription"] as string ?? "CinemaWebApp - Browse cinemas and movies.";
+    string metaRobots = ViewData["MetaRobots"] as string ?? "index,follow";
+    string? canonicalUrl = ViewData["CanonicalUrl"] as string;
 }
 
 <!DOCTYPE html>
@@ -9,7 +13,17 @@
 <head>
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<title>@ViewData["Title"]</title>
+	<title>@pageTitle</title>
+    <meta name="description" content="@metaDescription" />
+    <meta name="robots" content="@metaRobots" />
+    <meta property="og:title" content="@pageTitle" />
+    <meta property="og:description" content="@metaDescription" />
+    <meta property="og:type" content="website" />
+    @if (!string.IsNullOrWhiteSpace(canonicalUrl))
+    {
+        <link rel="canonical" href="@canonicalUrl" />
+        <meta property="og:url" content="@canonicalUrl" />
+    }
 	<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
 	<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/CinemaApp.Web.styles.css" asp-append-version="true" />
