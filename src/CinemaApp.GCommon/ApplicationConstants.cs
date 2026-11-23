@@ -8,5 +8,9 @@
         public const string UserRoleName = "User";
         public const string AdminRoleName = "Admin";
         public const string ApplicationHomePagePath = "/";
+
+        public const string SuccessNotificationKey = "SuccessMessage";
+        public const string WarningNotificationKey = "WarningMessage";
+        public const string ErrorNotificationKey = "ErrorMessage";
     }
 }

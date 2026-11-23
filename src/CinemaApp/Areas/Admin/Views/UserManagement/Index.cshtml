@@ -48,7 +48,7 @@
 
                                     <form method="post" asp-action="AssignRole" asp-controller="UserManagement" asp-area="Admin" class="d-inline">
                                         <input type="hidden" name="userId" value="@user.Id" />
-                                        <input type="hidden" name="role" id="assignRoleInput-@user.Id" />
+                                        <input type="hidden" name="roleName" id="assignRoleInput-@user.Id" />
                                         <button type="submit" class="btn btn-primary btn-sm fw-bold px-3 py-2"
                                                 onclick="setRoleValue('@user.Id', 'assignRoleInput')">
                                             <i class="bi bi-person-plus-fill"></i> Assign
@@ -57,7 +57,7 @@
 
                                     <form method="post" asp-action="RemoveRole" asp-controller="UserManagement" asp-area="Admin" class="d-inline">
                                         <input type="hidden" name="userId" value="@user.Id" />
-                                        <input type="hidden" name="role" id="removeRoleInput-@user.Id" />
+                                        <input type="hidden" name="roleName" id="removeRoleInput-@user.Id" />
                                         <button type="submit" class="btn btn-warning btn-sm fw-bold px-3 py-2"
                                                 onclick="setRoleValue('@user.Id', 'removeRoleInput')">
                                             <i class="bi bi-person-x-fill"></i> Remove

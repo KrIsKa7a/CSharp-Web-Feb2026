@@ -6,6 +6,7 @@
 
     using Data.Seeding.Utilities;
     using ViewModels;
+    using static GCommon.ApplicationConstants;
 
     public class UserManagement : BaseAdminController
     {
@@ -18,6 +19,7 @@
             this.roleManager = roleManager;
         }
 
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             IEnumerable<UserManagementEntryViewModel> indexViewModel = await userManager
@@ -38,6 +40,43 @@
             ViewData["ApplicationRoles"] = IdentitySeeder.DefaultRoles;
 
             return View(indexViewModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AssignRole(UserRoleInputModel inputModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            IdentityUser? dbUser = await userManager.FindByIdAsync(inputModel.UserId);
+            if (dbUser == null)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            IdentityRole? dbRole = await roleManager.FindByNameAsync(inputModel.RoleName);
+            if (dbRole == null)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            bool userAlreadyInRole = await userManager.IsInRoleAsync(dbUser, inputModel.RoleName);
+            if (userAlreadyInRole)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            IdentityResult result = await userManager.AddToRoleAsync(dbUser, inputModel.RoleName);
+            if (!result.Succeeded)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            TempData[SuccessNotificationKey] = "User role assigned successfully!";
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }
