@@ -82,5 +82,46 @@
 
             return RedirectToAction(nameof(Index));
         }
+
+        [HttpPost]
+        public async Task<IActionResult> RemoveRole(UserRoleInputModel inputModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            IdentityUser? dbUser = await userManager.FindByIdAsync(inputModel.UserId);
+            if (dbUser == null)
+            {
+                TempData[ErrorNotificationKey] = "The user you are trying to modify no longer exist!";
+                return RedirectToAction(nameof(Index));
+            }
+
+            IdentityRole? dbRole = await roleManager.FindByNameAsync(inputModel.RoleName);
+            if (dbRole == null)
+            {
+                TempData[ErrorNotificationKey] = "The role you are trying to remove no longer exist!";
+                return RedirectToAction(nameof(Index));
+            }
+
+            bool userAlreadyInRole = await userManager.IsInRoleAsync(dbUser, inputModel.RoleName);
+            if (!userAlreadyInRole)
+            {
+                TempData[WarningNotificationKey] = "User was not in the role that you tried to remove!";
+                return RedirectToAction(nameof(Index));
+            }
+
+            IdentityResult result = await userManager.RemoveFromRoleAsync(dbUser, inputModel.RoleName);
+            if (!result.Succeeded)
+            {
+                TempData[ErrorNotificationKey] = "Unexpected error occurred! Please try again later!";
+                return RedirectToAction(nameof(Index));
+            }
+
+            TempData[SuccessNotificationKey] = "User role removed successfully!";
+
+            return RedirectToAction(nameof(Index));
+        }
     }
 }
