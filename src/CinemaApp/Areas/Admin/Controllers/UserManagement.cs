@@ -123,5 +123,32 @@
 
             return RedirectToAction(nameof(Index));
         }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteUser([FromForm] string? userId)
+        {
+            if (string.IsNullOrWhiteSpace(userId))
+            {
+                return BadRequest();
+            }
+
+            IdentityUser? dbUser = await userManager.FindByIdAsync(userId);
+            if (dbUser == null)
+            {
+                TempData[ErrorNotificationKey] = "The user you are trying to modify no longer exist!";
+                return RedirectToAction(nameof(Index));
+            }
+
+            IdentityResult result = await userManager.DeleteAsync(dbUser);
+            if (!result.Succeeded)
+            {
+                TempData[ErrorNotificationKey] = "Unexpected error occurred! Please try again later!";
+                return RedirectToAction(nameof(Index));
+            }
+
+            TempData[SuccessNotificationKey] = "User deleted successfully!";
+
+            return RedirectToAction(nameof(Index));
+        }
     }
 }

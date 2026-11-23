@@ -58,6 +58,13 @@ namespace CinemaApp.Web
                 .AddDefaultUI()
                 .AddEntityFrameworkStores<CinemaAppDbContext>();
 
+            /* Degrades performance, but increases reactivity in case of user deletion */
+            /* Trade-off between Reactivity and Performance */
+            builder.Services.Configure<SecurityStampValidatorOptions>(opt =>
+            {
+                opt.ValidationInterval = TimeSpan.FromMinutes(1);
+            });
+
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
