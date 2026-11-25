@@ -59,6 +59,9 @@
             /// </summary>
             public const int ImageUrlMaxLength = 2048;
 
+            public const int ReleaseYearMinValue = 1888;
+            public const int ReleaseYearMaxValue = 2026;
+
             public const string ReleaseDateFormatRegexPattern = @"^\d{2}\/\d{2}\/\d{4}$";
         }
 

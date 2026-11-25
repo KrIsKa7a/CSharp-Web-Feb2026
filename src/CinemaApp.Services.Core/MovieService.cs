@@ -48,6 +48,11 @@
 
         public async Task<IEnumerable<GetAllMoviesResponseModel>> GetAllMoviesAsync(GetAllMoviesRequestData requestData)
         {
+            if (!modelValidator.IsValid(requestData))
+            {
+                return new List<GetAllMoviesResponseModel>();
+            }
+
             IQueryable<Movie> getAllMoviesQuery = movieRepository
                 .AllAsNoTracking();
             if (!string.IsNullOrWhiteSpace(requestData.SearchQuery))
@@ -55,6 +60,18 @@
                 /* TODO: Use Full-Text/Free-Text search when installation succeeds */
                 getAllMoviesQuery = getAllMoviesQuery
                     .Where(m => EF.Functions.Like(m.Title, $"%{requestData.SearchQuery}%"));
+            }
+
+            if (!string.IsNullOrWhiteSpace(requestData.GenreQuery))
+            {
+                getAllMoviesQuery = getAllMoviesQuery
+                    .Where(m => EF.Functions.Like(m.Genre, $"%{requestData.GenreQuery}%"));
+            }
+
+            if (requestData.ReleaseYearQuery.HasValue)
+            {
+                getAllMoviesQuery = getAllMoviesQuery
+                    .Where(m => m.ReleaseDate.Year == requestData.ReleaseYearQuery.Value);
             }
 
             IEnumerable<GetAllMoviesResponseModel> moviesResponseData = await getAllMoviesQuery

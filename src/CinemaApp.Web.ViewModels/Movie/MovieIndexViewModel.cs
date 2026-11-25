@@ -10,6 +10,12 @@
         [MaxLength(TitleMaxLength)]
         public string? SearchQuery { get; set; }
 
+        [MaxLength(GenreMaxLength)]
+        public string? GenreQuery { get; set; }
+
+        [Range(ReleaseYearMinValue, ReleaseYearMaxValue)]
+        public int? ReleaseYearQuery { get; set; }
+
         public IEnumerable<MoviesIndexEntryViewModel> Movies { get; set; }
             = new List<MoviesIndexEntryViewModel>();
     }

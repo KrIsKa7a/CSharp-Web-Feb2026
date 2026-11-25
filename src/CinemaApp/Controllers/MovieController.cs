@@ -40,7 +40,9 @@
 
             GetAllMoviesRequestData requestData = new GetAllMoviesRequestData()
             {
-                SearchQuery = inputModel.SearchQuery
+                SearchQuery = inputModel.SearchQuery,
+                GenreQuery = inputModel.GenreQuery,
+                ReleaseYearQuery = inputModel.ReleaseYearQuery
             };
             IEnumerable<GetAllMoviesResponseModel> allMoviesResponseData = await movieService
                 .GetAllMoviesAsync(requestData);
