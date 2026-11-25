@@ -13,5 +13,9 @@
 
         [Range(ReleaseYearMinValue, ReleaseYearMaxValue)]
         public int? ReleaseYearQuery { get; set; }
+
+        public int SkipEntries { get; set; }
+
+        public int TakeEntries { get; set; }
     }
 }

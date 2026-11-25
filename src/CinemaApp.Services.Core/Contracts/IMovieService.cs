@@ -20,5 +20,9 @@
         Task<MovieServiceStatusResponseModel> SoftDeleteMovieAsync(Guid id);
 
         Task<MovieServiceStatusResponseModel> HardDeleteMovieAsync(Guid id);
+
+        Task<int> GetMovieCountAsync();
+
+        Task<int> GetMovieCountAsync(string? searchQuery, string? genreQuery, int? releaseYearQuery);
     }
 }

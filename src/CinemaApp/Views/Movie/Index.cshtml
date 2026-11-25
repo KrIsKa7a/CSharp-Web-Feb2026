@@ -26,21 +26,21 @@
                        name="searchQuery"
                        class="form-control"
                        placeholder="Search by title..."
-                       value="@ViewData["SearchQuery"]" />
+                       value="@Model.SearchQuery" />
             </div>
             <div class="col">
                 <input type="text"
                        name="genreQuery"
                        class="form-control"
                        placeholder="Filter by genre..."
-                       value="@ViewData["Genre"]" />
+                       value="@Model.GenreQuery" />
             </div>
             <div class="col">
                 <input type="number"
                        name="releaseYearQuery"
                        class="form-control"
                        placeholder="Filter by year..."
-                       value="@ViewData["ReleaseYear"]" />
+                       value="@Model.ReleaseYearQuery" />
             </div>
             <div class="col">
                 <button type="submit" class="btn btn-primary">Filter</button>
@@ -118,3 +118,47 @@
         <a asp-action="Create" class="btn btn-primary">Add New Movie</a>
     }
 }
+
+<nav aria-label="Page navigation" class="mt-4">
+    <ul class="pagination">
+        @if (Model.PageNumber > 1)
+        {
+            <li class="page-item">
+                <a class="page-link" asp-action="Index"
+                   asp-route-pageNumber="@( Model.PageNumber - 1 )"
+                   asp-route-searchQuery="@Model.SearchQuery"
+                   asp-route-genreQuery="@Model.GenreQuery"
+                   asp-route-releaseYearQuery="@Model.ReleaseYearQuery">
+                    Previous
+                </a>
+            </li>
+        }
+
+        @for (int i = 1; i <= Model.TotalPages; i++)
+        {
+            <li class="page-item @(i == Model.PageNumber ? "active" : "")">
+                <a class="page-link" asp-action="Index"
+                   asp-route-pageNumber="@i"
+                   asp-route-searchQuery="@Model.SearchQuery"
+                   asp-route-genreQuery="@Model.GenreQuery"
+                   asp-route-releaseYearQuery="@Model.ReleaseYearQuery">
+                    @i
+                </a>
+            </li>
+        }
+
+        @if (Model.CurrentPage < Model.TotalPages)
+        {
+            <li class="page-item">
+                <a class="page-link" asp-action="Index"
+                   asp-route-pageNumber="@(Model.PageNumber + 1)"
+                   asp-route-searchQuery="@Model.SearchQuery"
+                   asp-route-genreQuery="@Model.GenreQuery"
+                   asp-route-releaseYearQuery="@Model.ReleaseYearQuery">
+                    Next
+                </a>
+            </li>
+        }
+    </ul>
+</nav>
+

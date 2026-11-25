@@ -86,6 +86,8 @@
                     ReleaseDate = m.ReleaseDate,
                     ImageUrl = m.ImageUrl
                 })
+                .Skip(requestData.SkipEntries)
+                .Take(requestData.TakeEntries)
                 .ToArrayAsync();
 
             return moviesResponseData;
@@ -302,6 +304,44 @@
             }
 
             return response;
+        }
+
+        public async Task<int> GetMovieCountAsync()
+        {
+            int movieCountDb = await movieRepository
+                .AllAsNoTracking()
+                .CountAsync();
+
+            return movieCountDb;
+        }
+
+        public async Task<int> GetMovieCountAsync(string? searchQuery, string? genreQuery, int? releaseYearQuery)
+        {
+            IQueryable<Movie> moviesCountQuery = movieRepository
+                .AllAsNoTracking();
+            if (!string.IsNullOrWhiteSpace(searchQuery))
+            {
+                /* TODO: Use Full-Text/Free-Text search when installation succeeds */
+                moviesCountQuery = moviesCountQuery
+                    .Where(m => EF.Functions.Like(m.Title, $"%{searchQuery}%"));
+            }
+
+            if (!string.IsNullOrWhiteSpace(genreQuery))
+            {
+                moviesCountQuery = moviesCountQuery
+                    .Where(m => EF.Functions.Like(m.Genre, $"%{genreQuery}%"));
+            }
+
+            if (releaseYearQuery.HasValue)
+            {
+                moviesCountQuery = moviesCountQuery
+                    .Where(m => m.ReleaseDate.Year == releaseYearQuery.Value);
+            }
+
+            int movieCountDb = await moviesCountQuery
+                .CountAsync();
+
+            return movieCountDb;
         }
     }
 }

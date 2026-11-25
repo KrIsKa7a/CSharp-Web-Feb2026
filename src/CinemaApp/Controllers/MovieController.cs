@@ -38,15 +38,29 @@
                 return BadRequest();
             }
 
+            int totalMoviesCount = await 
+                movieService.GetMovieCountAsync();
+            int totalPagesCount = (int)Math.Ceiling((double)totalMoviesCount / EntitiesPerPage);
+            if (inputModel.PageNumber > totalPagesCount)
+            {
+                return BadRequest();
+            }
+
             GetAllMoviesRequestData requestData = new GetAllMoviesRequestData()
             {
                 SearchQuery = inputModel.SearchQuery,
                 GenreQuery = inputModel.GenreQuery,
-                ReleaseYearQuery = inputModel.ReleaseYearQuery
+                ReleaseYearQuery = inputModel.ReleaseYearQuery,
+                SkipEntries = (inputModel.PageNumber - 1) * EntitiesPerPage,
+                TakeEntries = EntitiesPerPage
             };
             IEnumerable<GetAllMoviesResponseModel> allMoviesResponseData = await movieService
                 .GetAllMoviesAsync(requestData);
-            
+
+            bool hasFiltering = !(string.IsNullOrWhiteSpace(inputModel.SearchQuery) &&
+                                string.IsNullOrWhiteSpace(inputModel.GenreQuery) &&
+                                !inputModel.ReleaseYearQuery.HasValue);
+
             IEnumerable<MoviesIndexEntryViewModel> allMoviesViewModel = allMoviesResponseData
                 .Select(m => new MoviesIndexEntryViewModel()
                 {
@@ -59,7 +73,24 @@
                 })
                 .ToArray();
 
-            MovieIndexViewModel indexViewModel = new MovieIndexViewModel();
+            MovieIndexViewModel indexViewModel = new MovieIndexViewModel()
+            {
+                SearchQuery = inputModel.SearchQuery,
+                GenreQuery = inputModel.GenreQuery,
+                ReleaseYearQuery = inputModel.ReleaseYearQuery,
+                CurrentPage = inputModel.CurrentPage,
+                TotalPages = totalPagesCount,
+                PageNumber = inputModel.PageNumber,
+            };
+            if (hasFiltering)
+            {
+                totalMoviesCount = await movieService
+                    .GetMovieCountAsync(inputModel.SearchQuery, inputModel.GenreQuery, inputModel.ReleaseYearQuery);
+                
+                /* Reset pagination */
+                indexViewModel.TotalPages = (int)Math.Ceiling((double)totalMoviesCount / EntitiesPerPage);
+            }
+
             if (IsUserAuthenticated)
             {
                 IdentityUser? user = await userManager.FindByIdAsync(GetUserId()!);

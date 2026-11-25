@@ -14,5 +14,9 @@
         public const string SuccessNotificationKey = "SuccessMessage";
         public const string WarningNotificationKey = "WarningMessage";
         public const string ErrorNotificationKey = "ErrorMessage";
+
+        public const int EntitiesPerPage = 5;
+        public const int MinPageValue = 1;
+        public const int DefaultPageValue = 1;
     }
 }
