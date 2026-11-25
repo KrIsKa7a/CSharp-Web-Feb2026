@@ -27,6 +27,7 @@
             public const string ReleaseDateFormatMessage = "Release date must be in the format dd/MM/yyyy.";
 
             public const string ImageUrlMaxLengthMessage = "Image URL cannot exceed 2048 characters.";
+            public const string AddToWatchListNotSuccessfullMessage = "Movie could not be added to your watchlist!";
         }
 
         public const string GeneralErrorMessage = "An unexpected error occurred. Please try again later.";

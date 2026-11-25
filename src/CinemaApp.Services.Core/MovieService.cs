@@ -46,6 +46,34 @@
             return moviesResponseData;
         }
 
+        public async Task<IEnumerable<GetAllMoviesResponseModel>> GetAllMoviesAsync(GetAllMoviesRequestData requestData)
+        {
+            IQueryable<Movie> getAllMoviesQuery = movieRepository
+                .AllAsNoTracking();
+            if (!string.IsNullOrWhiteSpace(requestData.SearchQuery))
+            {
+                /* TODO: Use Full-Text/Free-Text search when installation succeeds */
+                getAllMoviesQuery = getAllMoviesQuery
+                    .Where(m => EF.Functions.Like(m.Title, $"%{requestData.SearchQuery}%"));
+            }
+
+            IEnumerable<GetAllMoviesResponseModel> moviesResponseData = await getAllMoviesQuery
+                .OrderBy(m => m.Title)
+                .ThenBy(m => m.Genre)
+                .Select(m => new GetAllMoviesResponseModel()
+                {
+                    Id = m.Id,
+                    Title = m.Title,
+                    Genre = m.Genre,
+                    Director = m.Director,
+                    ReleaseDate = m.ReleaseDate,
+                    ImageUrl = m.ImageUrl
+                })
+                .ToArrayAsync();
+
+            return moviesResponseData;
+        }
+
         public async Task<MovieServiceStatusResponseModel> CreateMovieAsync(CreateMovieRequestData requestData)
         {
             MovieServiceStatusResponseModel response = new MovieServiceStatusResponseModel();

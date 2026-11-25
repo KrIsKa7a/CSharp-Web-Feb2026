@@ -1,6 +1,6 @@
 ﻿namespace CinemaApp.Web.ViewModels.Movie
 {
-    public class AllMoviesIndexViewModel
+    public class MoviesIndexEntryViewModel
     {
         public string Id { get; set; } = null!;
 

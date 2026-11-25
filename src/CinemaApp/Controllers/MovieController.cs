@@ -3,6 +3,7 @@
     using System.Globalization;
 
     using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
 
     using Services.Core.Contracts;
@@ -18,21 +19,34 @@
     {
         private readonly IMovieService movieService;
         private readonly IWatchlistService watchlistService;
+        private readonly UserManager<IdentityUser> userManager;
 
-        public MovieController(IMovieService movieService, IWatchlistService watchlistService)
+        public MovieController(IMovieService movieService, IWatchlistService watchlistService,
+            UserManager<IdentityUser> userManager)
         {
             this.movieService = movieService;
             this.watchlistService = watchlistService;
+            this.userManager = userManager;
         }
 
         [AllowAnonymous]
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(MovieIndexViewModel inputModel)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            GetAllMoviesRequestData requestData = new GetAllMoviesRequestData()
+            {
+                SearchQuery = inputModel.SearchQuery
+            };
             IEnumerable<GetAllMoviesResponseModel> allMoviesResponseData = await movieService
-                .GetAllMoviesAsync();
-            IEnumerable<AllMoviesIndexViewModel> allMoviesViewModel = allMoviesResponseData
-                .Select(m => new AllMoviesIndexViewModel()
+                .GetAllMoviesAsync(requestData);
+            
+            IEnumerable<MoviesIndexEntryViewModel> allMoviesViewModel = allMoviesResponseData
+                .Select(m => new MoviesIndexEntryViewModel()
                 {
                     Id = m.Id.ToString(),
                     Title = m.Title,
@@ -42,16 +56,28 @@
                     ImageUrl = m.ImageUrl ?? DefaultImageUrl
                 })
                 .ToArray();
+
+            MovieIndexViewModel indexViewModel = new MovieIndexViewModel();
             if (IsUserAuthenticated)
             {
-                foreach (AllMoviesIndexViewModel movie in allMoviesViewModel)
+                IdentityUser? user = await userManager.FindByIdAsync(GetUserId()!);
+                if (user == null)
+                {
+                    return BadRequest();
+                }
+
+                indexViewModel.IsUserManager = await userManager.IsInRoleAsync(user, ManagerRoleName);
+
+                foreach (MoviesIndexEntryViewModel movie in allMoviesViewModel)
                 {
                     movie.IsInUserWatchlist = await watchlistService
                         .IsMovieInUserWatchlistAsync(GetUserId()!, Guid.Parse(movie.Id));
                 }
             }
 
-            return View(allMoviesViewModel);
+            indexViewModel.Movies = allMoviesViewModel;
+
+            return View(indexViewModel);
         }
 
         [HttpGet]

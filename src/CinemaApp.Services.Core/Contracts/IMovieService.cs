@@ -7,6 +7,8 @@
     {
         Task<IEnumerable<GetAllMoviesResponseModel>> GetAllMoviesAsync();
 
+        Task<IEnumerable<GetAllMoviesResponseModel>> GetAllMoviesAsync(GetAllMoviesRequestData requestData);
+
         Task<MovieServiceStatusResponseModel> CreateMovieAsync(CreateMovieRequestData requestData);
 
         Task<MovieBasicDataResponseModel?> GetMovieBasicDataByIdAsync(Guid id);
